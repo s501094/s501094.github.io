@@ -1,133 +1,149 @@
 <!DOCTYPE html>
 <html>
-    <head lang="en">
-        <title>Tyler Ellis blog/Journal</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <style>
-        body {font-family: "Lato", sans-serif}
-        .mySlides {display: none}
-        </style>
-    </head>
-    <body>
-        <!--Nav Bar at the top-->
-        <div class="w3-top">
-            <div class="w3-bar w3-black w3-card">
-              <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-              <a href="#" class="w3-bar-item w3-button w3-padding-large">Home</a>
-              <a href="#Blog" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Blog</a>
-              <a href="#Journal" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Journal</a>
-              <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Contact</a>
-              <!--<div class="w3-dropdown-hover w3-hide-small">
+
+<head lang="en">
+    <title>Tyler Ellis blog/Journal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: "Lato", sans-serif
+        }
+        
+        .mySlides {
+            display: none;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!--Nav Bar at the top-->
+    <div class="w3-top">
+        <div class="w3-bar w3-black w3-card">
+            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+            <a href="#" class="w3-bar-item w3-button w3-padding-large">Home</a>
+            <a href="#Blog" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Blog</a>
+            <a href="#Journal" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Journal</a>
+            <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Contact</a>
+            <!--<div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>     
                 <div class="w3-dropdown-content w3-bar-block w3-card-4">
                   <a href="#" class="w3-bar-item w3-button">Merchandise</a>
                   <a href="#" class="w3-bar-item w3-button">Extras</a>
                   <a href="#" class="w3-bar-item w3-button">Media</a>
                 </div>--->
-              </div>
-              <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
-            </div>
         </div>
+        <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
+    </div>
+    </div>
 
-        <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
-        <div id="Blog" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
-            <a href="#Blog" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Blog</a>
-            <a href="#Journal" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Journal</a>
-            <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Contact</a>
-        </div>
-        <!--Page Content-->
-        <div class="w3-content" style="max-width:2000px;margin-top:46px"></div>
-
-              <!-- Automatic Slideshow Images -->
-            <div class="mySlides w3-display-container w3-center">
-                <img src="/images/family.jpg" style="width:50%">
-                <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+    <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+    <div id="Blog" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
+        <a href="#Blog" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Blog</a>
+        <a href="#Journal" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Journal</a>
+        <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Contact</a>
+    </div>
+    <!--Page Content-->
+    <!--        <div class="w3-content" style="max-width:2000px;margin-top:46px"></div>-->
+    <div class="w3-card-4 w3-margin w3-white">
+        <!-- Automatic Slideshow Images -->
+        <div class="mySlides w3-display-container w3-center">
+            <img src="/images/family.jpg" style="width:50%">
+            <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
                 <h3>Our Family</h3>
-                <p><b>No matter what, we're always there for each other.</b></p>   
-                </div>
+                <p><b>No matter what, we're always there for each other.</b></p>
             </div>
-            <div class="mySlides w3-display-container w3-center">
-                <img src="/images/Damian.jpg" style="width:50%">
-                <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+        </div>
+        <div class="mySlides w3-display-container w3-center">
+            <img src="/images/Damian.jpg" style="width:50%">
+            <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
                 <h3>Chunky Damian</h3>
-                <p><b>I miss his rolls.</b></p>    
-                </div>
+                <p><b>I miss his rolls.</b></p>
             </div>
-            <div class="mySlides w3-display-container w3-center">
-                <img src="/images/DamianGuitar.jpg" style="width:50%">
-                <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+        </div>
+        <div class="mySlides w3-display-container w3-center">
+            <img src="/images/DamianGuitar.jpg" style="width:50%">
+            <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
                 <h3>Damian and his Guitar</h3>
-                <p><b>Someday, I hope he can find an outlet in Music.</b></p>    
-                </div>
+                <p><b>Someday, I hope he can find an outlet in Music.</b></p>
             </div>
-            <div>
-                <h1 align='center'>6/16/2021</h1>
-                    <p>So far today, I am trying to connect WP-CLi to this WordPress site so that I can update everything via cli. At this point I'm not sure if this is possible, but it would make blogging easier if I could do it via bash terminal. So far, I have installed the WP-CLI into my wsl bash.
-                    
-                    <br>
-                    </p>
-            </div>
-            <h2>Side Snippet</h2>
+        </div>
+        <div>
+            <h1 align='center'>6/16/2021</h1>
+            <p>So far today, I am trying to connect WP-CLi to this WordPress site so that I can update everything via cli. At this point I'm not sure if this is possible, but it would make blogging easier if I could do it via bash terminal. So far, I have
+                installed the WP-CLI into my wsl bash.
 
-                <p>My new Ducky keyboard came in with the cherry mx black silent switches. 
-                    <h3><form action="https://mechanicalkeyboards.com/shop/index.php?l=product_detail&p=5027&mkref=ttiena9">
-                    <input type="submit" value="Go to Switches" /></form></h3>
-                <!--<h3><a href="https://mechanicalkeyboards.com/shop/index.php?l=product_detail&p=5027&mkref=ttiena9"> Check it out here!</a></h3> -->
+                <br>
+            </p>
+        </div>
+        <h2>Side Snippet</h2>
 
-
-                    Overall, I'm pretty happy with the product I got from Mechanical Keyboards. This keyboard is only a "segue" to the Varmilo keyboard coming at the end of July. 
-                    
-                    <h4><form action="https://en.varmilo.com/keyboardproscenium/subject_product_detailed?subjectid=57"><input type="submit" value="Check Out Keyboard" /></form></h4>
-
-                    Once that comes in, I may get a decal for my tower. Overall, the plan is to do a black and white theme with at most, little hints of green here and there. What fits better into a black and white theme than panda bears?!
+        <p>My new Ducky keyboard came in with the cherry mx black silent switches.
+            <h3>
+                <form action="https://mechanicalkeyboards.com/shop/index.php?l=product_detail&p=5027&mkref=ttiena9">
+                    <input type="submit" value="Go to Switches" /></form>
+            </h3>
+            <!--<h3><a href="https://mechanicalkeyboards.com/shop/index.php?l=product_detail&p=5027&mkref=ttiena9"> Check it out here!</a></h3> -->
 
 
+            Overall, I'm pretty happy with the product I got from Mechanical Keyboards. This keyboard is only a "segue" to the Varmilo keyboard coming at the end of July.
 
-                    </p>
-    </body>
-    <!--Image of Location-->
-    <img src="/images/map.jpg" class="w3-image w3-greyscale-min" style="width:100%">
-    <footer>
+            <h4>
+                <form action="https://en.varmilo.com/keyboardproscenium/subject_product_detailed?subjectid=57"><input type="submit" value="Check Out Keyboard" /></form>
+            </h4>
 
-    </footer>
-    <script>
-        // Automatic Slideshow - change image every 4 seconds
-        var myIndex = 0;
-        carousel();
-        
-        function carousel() {
-          var i;
-          var x = document.getElementsByClassName("mySlides");
-          for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";  
-          }
-          myIndex++;
-          if (myIndex > x.length) {myIndex = 1}    
-          x[myIndex-1].style.display = "block";  
-          setTimeout(carousel, 4000);    
+            Once that comes in, I may get a decal for my tower. Overall, the plan is to do a black and white theme with at most, little hints of green here and there. What fits better into a black and white theme than panda bears?!
+
+
+
+        </p>
+</body>
+<!--Image of Location-->
+<img src="/images/map.jpg" class="w3-image w3-greyscale-min" style="width:100%">
+<footer>
+
+</footer>
+<script>
+    // Automatic Slideshow - change image every 4 seconds
+    var myIndex = 0;
+    carousel();
+
+    function carousel() {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
         }
-        
-        // Used to toggle the menu on small screens when clicking on the menu button
-        function myFunction() {
-          var x = document.getElementById("navDemo");
-          if (x.className.indexOf("w3-show") == -1) {
+        myIndex++;
+        if (myIndex > x.length) {
+            myIndex = 1
+        }
+        x[myIndex - 1].style.display = "block";
+        setTimeout(carousel, 4000);
+    }
+
+    // Used to toggle the menu on small screens when clicking on the menu button
+    function myFunction() {
+        var x = document.getElementById("navDemo");
+        if (x.className.indexOf("w3-show") == -1) {
             x.className += " w3-show";
-          } else { 
+        } else {
             x.className = x.className.replace(" w3-show", "");
-          }
         }
-        
-        // When the user clicks anywhere outside of the modal, close it
-        var modal = document.getElementById('ticketModal');
-        window.onclick = function(event) {
-          if (event.target == modal) {
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    var modal = document.getElementById('ticketModal');
+    window.onclick = function(event) {
+        if (event.target == modal) {
             modal.style.display = "none";
-          }
         }
-        </script>
-        
+    }
+</script>
+
 </html>
