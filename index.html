@@ -23,10 +23,15 @@
             padding: 10px;
         }
         
-        .mySlides {
-            height: 250px;
+        .card {
+            height: auto;
             width: 250px;
             box-shadow: 0 4px 8px 0 black, 0 6px 20px 0 black;
+            transition: 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -62,21 +67,21 @@
     <!--        <div class="w3-content" style="max-width:2000px;margin-top:46px"></div>-->
     <div class="w3-card-4 w3-margin w3-white">
         <!-- Automatic Slideshow Images -->
-        <div class="mySlides w3-display-container w3-center">
+        <div class="card w3-display-container w3-center">
             <img src="/images/family.jpg">
             <div class="container">
                 <h3>Our Family</h3>
                 <p><b>No matter what, we're always there for each other.</b></p>
             </div>
         </div>
-        <div class="mySlides w3-display-container w3-center">
+        <div class="card w3-display-container w3-center">
             <img src="/images/Damian.jpg">
             <div class="container">
                 <h3>Chunky Damian</h3>
                 <p><b>I miss his rolls.</b></p>
             </div>
         </div>
-        <div class="mySlides w3-display-container w3-center">
+        <div class="card w3-display-container w3-center">
             <img src="/images/DamianGuitar.jpg">
             <div class="container">
                 <h3>Damian and his Guitar</h3>
@@ -129,7 +134,7 @@
 
     function carousel() {
         var i;
-        var x = document.getElementsByClassName("mySlides");
+        var x = document.getElementsByClassName("card");
         for (i = 0; i < x.length; i++) {
             x[i].style.display = "none";
         }
