@@ -6,12 +6,19 @@ body {
     background-size: cover;
     justify-content:center;
 }
-w3-card-4 {
+div.w3-card-4{
     background: ghostwhite;
-    box-shadow: 0px 4px 40px white, 0px 4px 10px black;
+    box-shadow: 0px 4px 10px black, 0px 4px 40px white;
 }
+div.w3-card-4 {
+    background: ghostwhite;
+    box-shadow: 0px 4px 10px black, 0px 4px 40px white;
+}
+
 footer{
     background:transparent;
+    position:aboslute;
+
 
 }
 
