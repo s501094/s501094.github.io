@@ -1,3 +1,7 @@
 body {
     font-family: "Lato", sans-serif;
+    display: flex;
+    background-repeat: no-repeat;
+    background-size: cover;
+    justify-content: center;
 }
