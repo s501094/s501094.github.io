@@ -2,10 +2,12 @@ body {
     font-family: "Lato", sans-serif;
     display: flex;
     background-repeat: no-repeat;
-    background: #000;
     background-size: cover;
-    background: linear-gradient(#999, #000);
     justify-content: center;
+}
+footer{
+    background:transparent;
+
 }
 
 
