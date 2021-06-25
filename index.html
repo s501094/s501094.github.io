@@ -5,73 +5,53 @@
     <title>Tyler Ellis blog/Journal</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-
 </head>
 
 <body>
-
-
-
-
     <!--Nav Bar at the top-->
-    <div class="nav">
+    <div class="w3-top">
         <div class="w3-bar w3-black w3-card">
-            <a class="nav-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-            <a href="#" class="nav-bar-item w3-button w3-padding-large">Home</a>
-            <a href="#Blog" class="nav-bar-item w3-button w3-padding-large w3-hide-small">Blog</a>
-            <a href="#Journal" class="nav-bar-item w3-button w3-padding-large w3-hide-small">Journal</a>
-            <a href="#contact" class="nav-bar-item w3-button w3-padding-large w3-hide-small">Contact</a>
-            <!--<div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>     
-                <div class="w3-dropdown-content nav-bar-block w3-card">
-                  <a href="#" class="nav-bar-item w3-button">Merchandise</a>
-                  <a href="#" class="nav-bar-item w3-button">Extras</a>
-                  <a href="#" class="nav-bar-item w3-button">Media</a>
-                </div>--->
+            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+            <a href="#" class="w3-bar-item w3-button w3-padding-large">Home</a>
+            <a href="/Blog/Posts/index.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Blog</a>
+            <a href="#Journal" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Journal</a>
+            <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Contact</a>
         </div>
         <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
     </div>
-
-
-
-
-
-    <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
-    <div id="Blog" class="nav-bar-block nav-black w3-hide w3-hide-large w3-hide-medium nav" style="margin-top:46px">
-        <a href="#Blog" class="nav-bar-item w3-button w3-padding-large" onclick="myFunction()">Blog</a>
-        <a href="#Journal" class="nav-bar-item w3-button w3-padding-large" onclick="myFunction()">Journal</a>
-        <a href="#contact" class="nav-bar-item w3-button w3-padding-large" onclick="myFunction()">Contact</a>
     </div>
 
-
-
-
-
+    <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+    <div id="Blog" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
+        <a href="#Blog" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Blog</a>
+        <a href="#Journal" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Journal</a>
+        <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Contact</a>
+    </div>
     <!--Page Content-->
     <!--        <div class="w3-content" style="max-width:2000px;margin-top:46px"></div>-->
     <div class="w3-card-4 w3-margin w3-white">
-        <!-- Automatic w3-card Images -->
-        <div class="w3-card w3-display-container w3-center">
+        <!-- Automatic Slideshow Images -->
+        <div class="mySlides w3-display-container w3-center">
             <img src="/images/family.jpg">
-            <div class="w3-container">
+            <div class="container">
                 <h3>Our Family</h3>
                 <p><b>No matter what, we're always there for each other.</b></p>
             </div>
         </div>
-        <div class="w3-card w3-display-container w3-center">
+        <div class="mySlides w3-display-container w3-center">
             <img src="/images/Damian.jpg">
-            <div class="w3-container">
+            <div class="container">
                 <h3>Chunky Damian</h3>
                 <p><b>I miss his rolls.</b></p>
             </div>
         </div>
-        <div class="w3-card w3-display-container w3-center">
+        <div class="mySlides w3-display-container w3-center">
             <img src="/images/DamianGuitar.jpg">
-            <div class="w3-container">
+            <div class="container">
                 <h3>Damian and his Guitar</h3>
                 <p><b>Someday, I hope he can find an outlet in Music.</b></p>
             </div>
@@ -108,22 +88,19 @@
             </p>
         </div>-->
 </body>
-
-
-
-
-<img src="/images/map.jpg" class="w3-image w3-greyscale-min" style="width:100%">
-
+<!--Image of Location-->
+<!--<img src="/images/map.jpg" class="w3-image w3-greyscale-min" style="width:100%">-->
 <footer>
+
 </footer>
 <script>
-    // Automatic w3-card - change image every 4 seconds
+    // Automatic Slideshow - change image every 4 seconds
     var myIndex = 0;
     carousel();
 
     function carousel() {
         var i;
-        var x = document.getElementsByClassName("card");
+        var x = document.getElementsByClassName("mySlides");
         for (i = 0; i < x.length; i++) {
             x[i].style.display = "none";
         }
