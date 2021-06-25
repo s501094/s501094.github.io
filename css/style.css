@@ -2,12 +2,13 @@ body {
     font-family: "Lato", sans-serif;
     display: flex;
     background-repeat: no-repeat;
-    background: linear-gradient(to left top,#999, #000) fixed;
+    background: linear-gradient(to left top, #313537 , white) fixed;
     background-size: cover;
     justify-content:center;
 }
 w3-card-4 {
     background: ghostwhite;
+    box-shadow: 0px 4px 40px white, 0px 4px 10px black;
 }
 footer{
     background:transparent;
