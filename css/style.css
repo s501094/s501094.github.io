@@ -19,7 +19,7 @@ footer{
     background:transparent;
     position:aboslute;
 }
-div.w3-image{
+w3-image{
     filter: grayscale(50%);
     width: 100%;
 }
