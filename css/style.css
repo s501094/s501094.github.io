@@ -1,5 +1,5 @@
 body {
-    font-family: "Lato", sans-serif;
+    font-family: "ratio";
     display: flex;
     background-repeat: no-repeat;
     background: linear-gradient(to left top, #313537, white) fixed;
@@ -19,7 +19,13 @@ div.w3-card-4 {
 
 footer {
     background: transparent;
-    position: aboslute;
+    color:#777;
+
+}
+.social-links{
+    text-align: center;
+    font-size: medium;
+    line-height: 0;
 }
 
 w3-image {
