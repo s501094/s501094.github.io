@@ -1,4 +1,4 @@
-body {
+body{
     background: linear-gradient(to left top, #313537, white) fixed;
     background-repeat: no-repeat;
     background-size: cover;
@@ -7,7 +7,7 @@ body {
     justify-content: center;
     margin:0;
 }
-/* Add a black background color to the top navigation */
+/* mapping are for the top nav bar */
 .topnav {
     background-color: #333;
     overflow: hidden;
@@ -16,6 +16,7 @@ body {
     width: 100%;
     z-index: 1;
   }
+  /* Add a black background color to the top navigation */
   .topnav-bar{
       background-color:black;
       box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
