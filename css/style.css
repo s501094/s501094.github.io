@@ -1,28 +1,41 @@
-body {
-    font-family: "ratio";
-    display: flex;
-    background-repeat: no-repeat;
+.hide-author {
     background: linear-gradient(to left top, #313537, white) fixed;
+    background-repeat: no-repeat;
     background-size: cover;
+    display: flex;
+    font-family: "ratio";
     justify-content: center;
 }
 
 div.w3-card-4 {
-    background: ghostwhite;
-    box-shadow: 0px 4px 10px black, 0px 4px 40px white;
-}
-
-div.w3-card-4 {
-    background: ghostwhite;
-    box-shadow: 0px 4px 10px black, 0px 4px 40px white;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -webkit-box-shadow: 8px 8px 22px #000000;
+    -moz-box-shadow: 8px 8px 22px #000000;
+    box-shadow: 8px 8px 22px #000000;
+    transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    background-image: -moz-linear-gradient(-45deg, #696969, #FFFFFF);
+    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.00, #696969), color-stop(1.0, #FFFFFF));
+    border: 3px solid #696969;
+    background-color: #000000;
+    padding: 27px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 15pt;
+    color: #000000;
+    text-align: center;
+    outline: 0 solid #000000;
 }
 
 footer {
     background: transparent;
-    color:#777;
-
+    color: #777;
 }
-.social-links{
+
+.social-links {
     text-align: center;
     font-size: medium;
     line-height: 0;
@@ -39,7 +52,6 @@ w3-image {
 }
 
 .social-footer {
-    padding: 1rem;
     background: #8a8a8a;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -47,6 +59,7 @@ w3-image {
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
+    padding: 1rem;
     -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
@@ -57,8 +70,8 @@ w3-image {
 }
 
 .social-footer .social-footer-icons .fa {
-    font-size: 1.3rem;
     color: #fefefe;
+    font-size: 1.3rem;
 }
 
 .social-footer .social-footer-icons .fa:hover {
