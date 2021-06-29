@@ -58,7 +58,7 @@ w3-image {
     text-align: center;
 }
 .social-footer {
-    background: #8a8a8a;
+    background: ghostwhite;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -76,7 +76,7 @@ w3-image {
 }
 
 .social-footer .social-footer-icons .fa {
-    color: #fefefe;
+    color: ghostwhite;
     font-size: 1.3rem;
 }
 

@@ -14,16 +14,12 @@
 
 <body>
     <!--Nav Bar at the top-->
-    <div class="w3-top">
-        <div class="w3-bar w3-black w3-card">
-            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-            <a href="#" class="w3-bar-item w3-button w3-padding-large">Home</a>
-            <a href="/Blog/Posts/index.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Blog</a>
-            <a href="#Journal" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Journal</a>
-            <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Contact</a>
-        </div>
-        <!-- <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a> -->
-    </div>
+    <div class="topnav">
+        <a class="active" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+        <a href="/Blog/Posts/index.html" >Blog</a>
+        <a href="/Journal" >Journal</a>
+        <a href="/Contacts" >Contact</a>
+  </div>
 
     <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
     <!--<div id="Blog" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
@@ -68,11 +64,11 @@
         <footer id="footer">
             <div id="sqs-social" class="social-links sqs-svg-icon--list" data-content-field="connected-accounts">
                 <a href="https://www.facebook.com/Or10n0517"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
-                <a href="https://www.instagram.com/skr0dy"></a><i class="fa fa-instagram w3-hover-opacity"></i></a>
-                <a href="https://www.snapchat.com/s501094"></a><i class="fa fa-snapchat w3-hover-opacity"></i></a>
-                <a href="https://www.pinterest.com/tyellis1111245/_saved/"></a><i class="fa fa-pinterest-p w3-hover-opacity"></i>
-                <a href="https://twitter.com/skr0dy"></a><i class="fa fa-twitter w3-hover-opacity"></i>
-                <a href="https://www.linkedin.com/in/ty-ellis-0517/"></a><i class="fa fa-linkedin w3-hover-opacity"></i>
+                <a href="https://www.instagram.com/skr0dy"><i class="fa fa-instagram w3-hover-opacity"></i></a>
+                <a href="https://www.snapchat.com/s501094"><i class="fa fa-snapchat w3-hover-opacity"></i></a>
+                <a href="https://www.pinterest.com/tyellis1111245/_saved/"><i class="fa fa-pinterest-p w3-hover-opacity"></i></a>
+                <a href="https://twitter.com/skr0dy"><i class="fa fa-twitter w3-hover-opacity"></i></a>
+                <a href="https://www.linkedin.com/in/ty-ellis-0517/"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
             </div>
         </footer> 
     </div>   
@@ -142,7 +138,7 @@
 
     // Used to toggle the menu on small screens when clicking on the menu button
     function myFunction() {
-        var x = document.getElementById("navDemo");
+        var x = document.getElementById("topnav");
         if (x.className.indexOf("w3-show") == -1) {
             x.className += " w3-show";
         } else {
