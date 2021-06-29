@@ -7,7 +7,7 @@
     justify-content: center;
 }
 
-div.w3-card-4 {
+.w3-card-4 {
     -moz-border-radius: 15px;
     border-radius: 15px;
     -webkit-box-shadow: 8px 8px 22px #000000;
@@ -31,14 +31,15 @@ div.w3-card-4 {
 }
 
 footer {
+    color: ghostwhite;
     background: transparent;
-    color: #777;
 }
 
 .social-links {
-    text-align: center;
+    color: ghostwhite;
     font-size: medium;
     line-height: 0;
+    text-align: center;
 }
 
 w3-image {
@@ -50,7 +51,12 @@ w3-image {
     width: device-width;
     zoom: 1.0;
 }
-
+.social-links {
+    color: ghostwhite;
+    font-size: medium;
+    line-height: 0;
+    text-align: center;
+}
 .social-footer {
     background: #8a8a8a;
     display: -webkit-flex;
