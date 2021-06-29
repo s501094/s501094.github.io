@@ -47,12 +47,16 @@ body{
     background-color: ghostwhite;
     color: black;
   }
-.w3-card-4 {
+.container{
+    padding:0.01em 16px;
+    box-sizing: inherit;
+}
+.slideshow-container {
     -moz-border-radius: 15px;
-    border-radius: 15px;
+    border-radius: 20px;
     -webkit-box-shadow: 8px 8px 22px #000000;
     -moz-box-shadow: 8px 8px 22px #000000;
-    box-shadow: 8px 8px 22px #000000;
+    box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
     transform: scale(1.1);
     -ms-transform: scale(1.1);
     -webkit-transform: scale(1.1);
@@ -60,17 +64,31 @@ body{
     -o-transform: scale(1.1);
     background-image: -moz-linear-gradient(-45deg, #696969, #FFFFFF);
     background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.00, #696969), color-stop(1.0, #FFFFFF));
-    border: 3px solid #696969;
-    background-color: #000000;
+    border: transparent;
+    background-color: transparent;
     padding: 27px;
     font-family: Verdana, Geneva, sans-serif;
     font-size: 15pt;
-    color: #000000;
     text-align: center;
-    outline: 0 solid #000000;
+    margin: 64px;
+    padding: inherit;
+}
+.slideshow-container :hover{
+    box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
+}
+.photo-container{
+    box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
+    display: block;
+    padding: .01em;
+    position: relative;
+    text-align: center;
+}
+.photo-container-text{
+    box-sizing: inherit;
+    padding-bottom: 32px;
 }
 
-footer {
+.footer {
     background: transparent;
     color: ghostwhite;
 
