@@ -88,9 +88,11 @@ body{
     padding-bottom: 32px;
 }
 .img{
-    width: 100%;
+    box-sizing: content-box;
     height: 20px;
     overflow: hidden;
+    width: 100%;
+    
 }
 
 .footer {
