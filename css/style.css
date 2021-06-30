@@ -2,6 +2,8 @@
     width: device-width;
     zoom: 1.0;
 }
+
+/* ***************** body section of the page *************************  */
 body{
     background: linear-gradient(to left top, #313537, white) fixed;
     background-repeat: no-repeat;
