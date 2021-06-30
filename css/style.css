@@ -77,9 +77,9 @@
     margin: 64px;
     padding: inherit;
 }
-.slideshow-container :hover{
+/* .slideshow-container :hover{
     box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
-}
+} */
 .photo-container{
     box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
     display: block;
