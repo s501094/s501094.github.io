@@ -99,42 +99,35 @@ body{
     text-align: center;
     border-radius: 25px;
 }
+/****************************************** Images **************************************/
 .a{
     box-sizing: content-box;
-    filter: grayscale(50%);
     height: 700px;
-    overflow: hidden;
-    width: 500%;
-    border-radius: 25px;
-    
+    width: 500px;
+    border-radius: 25px;   
 }
 .b{
     box-sizing: content-box;
-    filter: grayscale(50%);
     height: 700px;
-    overflow: hidden;
-    width: 500%;
+    width: 500px;
     border-radius: 25px;
-    
 }
 .c{
     box-sizing: content-box;
-    filter: grayscale(50%);
     height: 700px;
-    overflow: hidden;
-    width: 500%;
-    border-radius: 25px;
-    
+    width: 500px;
+    border-radius: 25px; 
 }
 .img{
     box-sizing: content-box;
     filter: grayscale(50%);
     height: 700px;
     overflow: hidden;
-    width: 500%;
+    width: 500px;
     border-radius: 25px;
-    
 }
+/****************************************** image text **************************************/
+
 .photo-container-text{
     box-sizing: inherit;
     padding-bottom: 32px;
