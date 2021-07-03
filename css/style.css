@@ -99,19 +99,47 @@ body{
     text-align: center;
     border-radius: 15px;
 }
-.photo-container-text{
-    box-sizing: inherit;
-    padding-bottom: 32px;
+.a{
+    box-sizing: content-box;
+    filter: grayscale(50%);
+    height: 700px;
+    overflow: hidden;
+    width: 500%;
+    border-radius: 15px;
+    
+}
+.b{
+    box-sizing: content-box;
+    filter: grayscale(50%);
+    height: 700px;
+    overflow: hidden;
+    width: 500%;
+    border-radius: 15px;
+    
+}
+.c{
+    box-sizing: content-box;
+    filter: grayscale(50%);
+    height: 700px;
+    overflow: hidden;
+    width: 500%;
+    border-radius: 15px;
+    
 }
 .img{
     box-sizing: content-box;
     filter: grayscale(50%);
-    height: 160px;
+    height: 700px;
     overflow: hidden;
-    width: 100%;
+    width: 500%;
     border-radius: 15px;
     
 }
+.photo-container-text{
+    box-sizing: inherit;
+    padding-bottom: 32px;
+}
+
 
 .footer {
     background: transparent;
