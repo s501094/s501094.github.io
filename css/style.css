@@ -104,19 +104,19 @@ body{
     box-sizing: content-box;
     height: 700px;
     width: 500px;
-    border-radius: 25px;   
+    border-radius:  50% 20% / 10% 40%;   
 }
 .b{
     box-sizing: content-box;
     height: 700px;
     width: 500px;
-    border-radius: 25px;
+    border-radius:  50% 20% / 10% 40%;
 }
 .c{
     box-sizing: content-box;
     height: 700px;
     width: 500px;
-    border-radius: 25px; 
+    border-radius:  50% 20% / 10% 40%; 
 }
 .img{
     box-sizing: content-box;
@@ -124,7 +124,7 @@ body{
     height: 700px;
     overflow: hidden;
     width: 500px;
-    border-radius: 25px;
+    border-radius:  25% 10%;
 }
 /****************************************** image text **************************************/
 
