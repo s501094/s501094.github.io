@@ -88,46 +88,55 @@ body{
     margin: 64px;
     padding: inherit;
 }
-/* .slideshow-container :hover{
+/*.slideshow-container :hover{
     box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
-} */
+}*/
 .photo-container{
     box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
-    display: block;
-    padding: .01em;
+    display:flex;
+    padding: 1em;
     position: relative;
     text-align: center;
-    border-radius: 25px;
+    border-radius: 15px;
 }
-/****************************************** Images **************************************/
 .a{
-    box-sizing: content-box;
+    box-sizing: content-box;;
     height: 700px;
     width: 500px;
-    border-radius:  50% 20% / 10% 40%;   
+    border-radius:  50% 20% / 10% 40%;
+    padding: 10px;
+}
+.a :hover{
+   box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black; 
 }
 .b{
-    box-sizing: content-box;
+    box-sizing: content-box;;
+    height: 700px;
+    width: 500px;
+    border-radius:  50% 20% / 10% 40%;
+    
+}
+.b :hover{
+   box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black; 
+}
+.c{
+    box-sizing: content-box;;
     height: 700px;
     width: 500px;
     border-radius:  50% 20% / 10% 40%;
 }
-.c{
-    box-sizing: content-box;
-    height: 700px;
-    width: 500px;
-    border-radius:  50% 20% / 10% 40%; 
+.c :hover{
+   box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black; 
 }
 .img{
     box-sizing: content-box;
-    filter: grayscale(50%);
-    height: 700px;
+    filter: grayscale(75%);
+    height: 160px;
     overflow: hidden;
-    width: 500px;
+    width: 100%;
     border-radius:  25% 10%;
+    
 }
-/****************************************** image text **************************************/
-
 .photo-container-text{
     box-sizing: inherit;
     padding-bottom: 32px;
