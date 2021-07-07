@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head >
+
+<head>
     <title>Tyler Ellis blog/Journal</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -12,18 +13,18 @@
 
 <body>
     <!--Nav Bar at the top-->
-    <div class="topnav">
+    <!-- <div class="topnav">
         <div class="topnav-bar">
             <a class="active" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu">
-            <a href="/" >Home</a>
-            <a href="/Blog/Posts/index.html" >Blog</a>
-            <a href="/Journal" >Journal</a>
-            <a href="/Contacts" >Contact</a>
+                <a href="/">Home</a>
+                <a href="/Blog/Posts/index.html">Blog</a>
+                <a href="/Journal">Journal</a>
+                <a href="/Contacts">Contact</a>
         </div>
     </div>
 
-    <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
-    <!--<div id="Blog" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
+    Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links)
+    <div id="Blog" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
         <a href="#Blog" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Blog</a>
         <a href="#Journal" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Journal</a>
         <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Contact</a>
@@ -31,72 +32,73 @@
 
 
 
-    <!--Page Content-->
-    <!--        <div class="w3-content" style="max-width:2000px;margin-top:46px"></div>-->
+    <!--Page Content
     <div class="container">
         <div class="slideshow-container">
-            <!-- Automatic Slideshow Images -->
-            <div class="card">
-                <img src="/images/family.jpg" width="500" height="700">
+            Automatic Slideshow Images 
+            <div class="mySlides fade">
+                <img src="https://s501094.github.io/images/family.jpg" width="500" height="700">
                 <div class="photo-container-text">
                     <h3>Our Family</h3>
                     <p><b>No matter what, we're always there for each other.</b></p>
                 </div>
             </div>
-            <div class="card">
-                <img src="/images/Damian.jpg" width="500" height="700">
+            <div class="mySlides fade">
+                <img src="https://s501094.github.io/images/damian.jpg" width="500" height="700">
                 <div class="photo-container-text">
                     <h3>Chunky Damian</h3>
                     <p><b>I miss his rolls.</b></p>
                 </div>
             </div>
-            <div class="card">
-                <img src="/images/DamianGuitar.jpg" width="500" height="700">
+            <div class="mySlides fade">
+                <img src="https://s501094.github.io/images/DamianGuitar.jpgg" width="500" height="700">
                 <div class="photo-container-text">
                     <h3>Damian and his Guitar</h3>
                     <p><b>Someday, I hope he can find an outlet in Music.</b></p>
                 </div>
             </div>
         </div>
-        
-        <div class="img">
-            <img src="/images/map.png" >
-        </div>
-    </div>    
+    </div>
+    <div class="img">
+        <img src="https://s501094.github.io/images/map.png">
+    </div>
 
-    <!--Image of Location
-    <img src="/images/map.jpg" class="w3-image w3-greyscale-min" style="width:100%">-->
-    
     <div id="footerwrapper"></div>
-        <footer id="footer">
-            <div id="sqs-social" class="social-links sqs-svg-icon--list" data-content-field="connected-accounts">
-                <a href="https://www.facebook.com/Or10n0517"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
-                <a href="https://www.instagram.com/skr0dy"><i class="fa fa-instagram w3-hover-opacity"></i></a>
-                <a href="https://www.snapchat.com/s501094"><i class="fa fa-snapchat w3-hover-opacity"></i></a>
-                <a href="https://www.pinterest.com/tyellis1111245/_saved/"><i class="fa fa-pinterest-p w3-hover-opacity"></i></a>
-                <a href="https://twitter.com/skr0dy"><i class="fa fa-twitter w3-hover-opacity"></i></a>
-                <a href="https://www.linkedin.com/in/ty-ellis-0517/"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
-            </div>
-        </footer> 
-    </div>   
+    <footer id="footer">
+        <div id="sqs-social" class="social-links sqs-svg-icon--list" data-content-field="connected-accounts">
+            <a href="https://www.facebook.com/Or10n0517"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
+            <a href="https://www.instagram.com/skr0dy"><i class="fa fa-instagram w3-hover-opacity"></i></a>
+            <a href="https://www.snapchat.com/s501094"><i class="fa fa-snapchat w3-hover-opacity"></i></a>
+            <a href="https://www.pinterest.com/tyellis1111245/_saved/"><i
+                    class="fa fa-pinterest-p w3-hover-opacity"></i></a>
+            <a href="https://twitter.com/skr0dy"><i class="fa fa-twitter w3-hover-opacity"></i></a>
+            <a href="https://www.linkedin.com/in/ty-ellis-0517/"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
+        </div>
+    </footer>
+    </div> -->
 </body>
 <script>
     // Automatic Slideshow - change image every 4 seconds
-    var myIndex = 0;
-    carousel();
+    var slideIndex = 0;
+    showSlides();
 
-    function carousel() {
+    function showSlides() {
         var i;
-        var x = document.getElementsByClassName("card");
-        for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";
+        var slides = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("dot");
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
         }
-        myIndex++;
-        if (myIndex > x.length) {
-            myIndex = 1
+        slideIndex++;
+        if (slideIndex > slides.length) {
+            slideIndex = 1
         }
-        x[myIndex - 1].style.display = "block";
-        setTimeout(carousel, 8000);
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+        setTimeout(showSlides, 8000); // Change image every 2 seconds
     }
 
     // Used to toggle the menu on small screens when clicking on the menu button
@@ -111,7 +113,7 @@
 
     // When the user clicks anywhere outside of the modal, close it
     var modal = document.getElementById('ticketModal');
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }

@@ -12,7 +12,7 @@
 	justify-content: center;
 	margin:0;
 }
-/*********************** mapping are for the top nav bar ****************************/
+/* ********************** mapping are for the top nav bar ***************************
 .topnav {
 	background-color: #333;
 	overflow: hidden;
@@ -21,7 +21,6 @@
 	width: 100%;
 	z-index: 1;
 }
-/* Add a black background color to the top navigation */
 .topnav-bar{
 	background-color:black;
 	box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
@@ -29,7 +28,6 @@
 	overflow: hidden;
 	width: 100%;
 }
-/* Style the links inside the navigation bar */
 .topnav a {
 	float: left;
 	color: #f2f2f2;
@@ -38,19 +36,20 @@
 	text-decoration: none;
 	font-size: 17px;
 }
-/* Change the color of links on hover */
 .topnav a:hover {
 	background-color: grey;
 	color: white;
 }
-/* Add a color to the active/current link */
 .topnav a.active {
 	background-color: ghostwhite;
 	color: black;
 }
-.container{
+/* ********************************************************** Body of Page ************************************************************ */
+/* .container{
 	padding:0.01em 16px;
+	padding-bottom: 2px;
 	box-sizing: inherit;
+
 }
 .slideshow-container {
 	-moz-border-radius: 15px;
@@ -77,8 +76,8 @@
 /* .slideshow-container :hover{
 	box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
 }
-*/
-.card{
+
+.mySlides{
 	box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
 	display: none;
 	padding: .01em;
@@ -86,6 +85,26 @@
 	text-align: center;
 	border-radius: 15px;
 }
+.fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+  @-webkit-keyframes fade {
+    from {opacity: .4} 
+    to {opacity: 1}
+  }
+  
+  @keyframes fade {
+    from {opacity: .4} 
+    to {opacity: 1}
+  }
+  
+  /* On smaller screens, decrease text size 
+  @media only screen and (max-width: 300px) {
+    .prev, .next,.text {font-size: 11px}
+  }
 .img{
 	box-sizing: content-box;
 	filter: grayscale(50%);
@@ -97,7 +116,18 @@
 .photo-container-text{
 	box-sizing: inherit;
 	padding-bottom: 32px;
+	color:black;
 }
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+  }
 .footer {
 	background: transparent;
 	color: ghostwhite;
@@ -140,4 +170,4 @@
 .social-footer .social-footer-icons .fa:hover {
 	color: #4a4a4a;
 	transition: color 0.3s ease-in;
-}
+} */ 
