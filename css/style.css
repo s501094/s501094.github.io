@@ -22,7 +22,7 @@ body{
     justify-content: center;
     margin:0;
 }
-/* mapping are for the top nav bar */
+/*********************** mapping are for the top nav bar ****************************/
 .topnav {
     background-color: #333;
     overflow: hidden;
@@ -91,17 +91,13 @@ body{
 /* .slideshow-container :hover{
     box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
 } */
-.photo-container{
+.card{
     box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
     display: block;
     padding: .01em;
     position: relative;
     text-align: center;
     border-radius: 15px;
-}
-.photo-container-text{
-    box-sizing: inherit;
-    padding-bottom: 32px;
 }
 .img{
     box-sizing: content-box;
@@ -111,6 +107,10 @@ body{
     width: 100%;
     border-radius: 15px;
     
+}
+.photo-container-text{
+    box-sizing: inherit;
+    padding-bottom: 32px;
 }
 
 .footer {
