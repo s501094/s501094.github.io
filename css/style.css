@@ -48,7 +48,7 @@ body{
 	color: black;
 }
 /* ********************************************************** Body of Page ************************************************************ */
-/* .container{
+ .container{
 	padding:0.01em 16px;
 	padding-bottom: 2px;
 	box-sizing: inherit;
@@ -56,7 +56,7 @@ body{
 }
 .slideshow-container {
 	-moz-border-radius: 15px;
-	border-radius: 20px;
+	border-radius: 25px;
 	-webkit-box-shadow: 8px 8px 22px #000000;
 	-moz-box-shadow: 8px 8px 22px #000000;
 	box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
@@ -69,7 +69,7 @@ body{
 	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.00, #696969), color-stop(1.0, #FFFFFF));
 	border: transparent;
 	background-color: transparent;
-	padding: 27px;
+	padding: 2px;
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 15pt;
 	text-align: center;
@@ -78,15 +78,18 @@ body{
 }
 /* .slideshow-container :hover{
 	box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
-}
+} */
 
 .mySlides{
 	box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
 	display: none;
-	padding: .01em;
+	padding: 5px;
 	position: relative;
 	text-align: center;
-	border-radius: 15px;
+	/* border-radius: 15px; */
+}
+.img{
+	border-radius: 50%;
 }
 .fade {
     -webkit-animation-name: fade;
