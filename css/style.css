@@ -12,7 +12,7 @@ body{
 	justify-content: center;
 	margin:0;
 }
-/* ********************** mapping are for the top nav bar ***************************
+ ********************** mapping are for the top nav bar ***************************
 .topnav {
 	background-color: #333;
 	overflow: hidden;
@@ -22,11 +22,11 @@ body{
 	z-index: 1;
 }
 .topnav-bar{
-	background-color:black;
+	background-color:#333;
 	box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
 	color: ghostwhite;
 	overflow: hidden;
-	width: 100%;
+	width:100%;
 }
 .topnav a {
 	float: left;
