@@ -2,7 +2,7 @@
 	width: device-width;
 	zoom: 1.0;
 }
-/* ***************** body section of the page ************************* */
+/************************************************ body section of the page *********************************************************************************************/
 body{
 	background: linear-gradient(to left top, #313537, white) fixed;
 	background-repeat: no-repeat;
@@ -12,6 +12,8 @@ body{
 	justify-content: center;
 	margin:0;
 }
+/************************************************ Navigation Bar Section *********************************************************************************************/
+
 /* mapping are for the top nav bar */
 .topnav {
 	background-color: #333;
@@ -48,64 +50,35 @@ body{
 	background-color: ghostwhite;
 	color: black;
 }
+/************************************************ Entry form Section *********************************************************************************************/
+.entryform{
+    padding:0.01em 16px; 
+}
 .container{
 	background: transparent;
 	box-sizing: inherit;
 	margin-left: 16px;
 	padding:0.01em 16px;
 }
-.row-padding{
-	color: #000;
-	background-color: transparent;
-	box-sizing: inherit;
-	float: left !important;
-	padding: 0 8px;
-	padding-bottom: 64px !important;
-	padding-top: 64px !important;
-}
-.third{
-	box-sizing: inherit;
-	float: left;
-	padding: 0 8px;
-	width: 33.33333%;
-}
-.card{
-	background: ghostwhite;
-	border: black;
-	border-radius: 25px;
-	border-style: solid;
-	box-shadow: 4px 4px 80px 2px white,4px 4px 15px 10px black;
-	margin-left: 16px !important;
-	min-height: 460px;
-	padding: 0.01em 16px;
-}
-.h3{
-	box-sizing: inherit;
-	font-family: "Segoe UI", Arial, Helvetica, sans-serif;
-	font-size: 24px;
-	font-weight: 400;
-	margin: 10px 0;
-}
-.fa{
-	box-sizing: inherit;
-	display: inline-block;
-	font: normal normal normal 14px/1 FontAwesome;
-	font-size: 120px;
-	margin-bottom: 16px !important;
-	text-rendering: auto;
-}
-.img{
-	text-align: center;
-	border-style: none;
-	box-sizing: inherit;
-	height:40px;
-	vertical-align: middle;
-	width:30px;
-}
-.p{
-	text-align: center;
-	box-sizing: inherit;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/************************************************ Footer Section *********************************************************************************************/
+
 .footer {
 	background: transparent;
 	color: ghostwhite;
