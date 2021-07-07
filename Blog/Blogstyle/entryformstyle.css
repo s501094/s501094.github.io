@@ -13,7 +13,6 @@ body{
 	margin:0;
 }
 /************************************************ Navigation Bar Section *********************************************************************************************/
-
 /* mapping are for the top nav bar */
 .topnav {
 	background-color: #333;
@@ -52,13 +51,12 @@ body{
 }
 /************************************************ Entry form Section *********************************************************************************************/
 .entryform{
-    padding-top: 10%;
+	padding-top: 10%;
 }
 .entryform .textarea{
-    margin: 0px; 
-    height: 500px; 
-    width: 1046px;
-    
+	margin: 0px;
+	height: 500px;
+	width: 1046px;
 }
 .container{
 	background: transparent;
@@ -66,25 +64,7 @@ body{
 	margin-left: 16px;
 	padding:0.01em 16px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /************************************************ Footer Section *********************************************************************************************/
-
 .footer {
 	background: transparent;
 	color: ghostwhite;
