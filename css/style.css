@@ -80,7 +80,7 @@
 */
 .card{
 	box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
-	display: block;
+	display: none;
 	padding: .01em;
 	position: relative;
 	text-align: center;
