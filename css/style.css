@@ -98,26 +98,19 @@ body{
 	animation-name: fade;
 	animation-duration: 1.5s;
   }
-  
   @-webkit-keyframes fade {
 	from {opacity: .4} 
 	to {opacity: 1}
   }
-  
   @keyframes fade {
 	from {opacity: .4} 
 	to {opacity: 1}
   }
-  
   /* On smaller screens, decrease text size */
   @media only screen and (max-width: 300px) {
 	.text {font-size: 11px}
   }
-  
-  /* On smaller screens, decrease text size 
-  @media only screen and (max-width: 300px) {
-    .prev, .next,.text {font-size: 11px}
-  }
+
 .img{
 	box-sizing: content-box;
 	filter: grayscale(50%);
@@ -183,4 +176,4 @@ body{
 .social-footer .social-footer-icons .fa:hover {
 	color: #4a4a4a;
 	transition: color 0.3s ease-in;
-} */ 
+}
