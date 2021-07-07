@@ -16,7 +16,17 @@
     <meta name="theme-color" content="#fafafa">
 </head>
 <body>
-    <!-- Content -->
+    <!--Nav Bar at the top-->
+    <div class="topnav">
+        <div class="topnav-bar">
+            <a class="active" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu">
+            </a><a href="/">Home</a>
+            <a href="/Journal">Journal</a>
+            <a href="/Contacts">Contact</a>
+            <a href="../Entry/entryForm.html">PostBlog</a>
+        </div>
+    </div>
+    <!-- Blog Entry form -->
     <form>
         <input name="name" type="text" value="title" /> <br /> 
         <textarea cols="30" rows="2">Blog Entry</textarea><br /> 
@@ -27,8 +37,18 @@
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <script>
         window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-        ga('create', 'UA-XXXXX-Y', 'auto'); ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon'); ga('send', 'pageview')
-    </script>
+        ga('create', 'UA-XXXXX-Y', 'auto'); ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon'); ga('send', 'pageview')</script>
     <script src="https://www.google-analytics.com/analytics.js" async></script>
+    <script>
+    function myFunction() {
+        var x = document.getElementById("topnav");
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+    </script>
+
 </body>
 </html>
