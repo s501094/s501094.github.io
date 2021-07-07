@@ -1,154 +1,143 @@
 @viewport {
-    width: device-width;
-    zoom: 1.0;
+	width: device-width;
+	zoom: 1.0;
 }
-
-/* ***************** body section of the page *************************  */
-body{
-    background: linear-gradient(to left top, #313537, white) fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    font-family: "ratio";
-    justify-content: center;
-    margin:0;
+/* ***************** body section of the page ************************* */
+.body{
+	background: linear-gradient(to left top, #313537, white) fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
+	display: flex;
+	font-family: "ratio";
+	justify-content: center;
+	margin:0;
 }
 /*********************** mapping are for the top nav bar ****************************/
 .topnav {
-    background-color: #333;
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1;
-  }
-  /* Add a black background color to the top navigation */
-  .topnav-bar{
-      background-color:black;
-      box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
-      color: ghostwhite;
-      overflow: hidden;
-      width: 100%;
-      
-  }
-  
-  /* Style the links inside the navigation bar */
-  .topnav a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-  }
-  
-  /* Change the color of links on hover */
-  .topnav a:hover {
-    background-color: grey;
-    color: white;
-  }
-  
-  /* Add a color to the active/current link */
-  .topnav a.active {
-    background-color: ghostwhite;
-    color: black;
-  }
+	background-color: #333;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1;
+}
+/* Add a black background color to the top navigation */
+.topnav-bar{
+	background-color:black;
+	box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+	color: ghostwhite;
+	overflow: hidden;
+	width: 100%;
+}
+/* Style the links inside the navigation bar */
+.topnav a {
+	float: left;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+}
+/* Change the color of links on hover */
+.topnav a:hover {
+	background-color: grey;
+	color: white;
+}
+/* Add a color to the active/current link */
+.topnav a.active {
+	background-color: ghostwhite;
+	color: black;
+}
 .container{
-    padding:0.01em 16px;
-    box-sizing: inherit;
+	padding:0.01em 16px;
+	box-sizing: inherit;
 }
 .slideshow-container {
-    -moz-border-radius: 15px;
-    border-radius: 20px;
-    -webkit-box-shadow: 8px 8px 22px #000000;
-    -moz-box-shadow: 8px 8px 22px #000000;
-    box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
-    transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    background-image: -moz-linear-gradient(-45deg, #696969, #FFFFFF);
-    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.00, #696969), color-stop(1.0, #FFFFFF));
-    border: transparent;
-    background-color: transparent;
-    padding: 27px;
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 15pt;
-    text-align: center;
-    margin: 64px;
-    padding: inherit;
+	-moz-border-radius: 15px;
+	border-radius: 20px;
+	-webkit-box-shadow: 8px 8px 22px #000000;
+	-moz-box-shadow: 8px 8px 22px #000000;
+	box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
+	transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	-webkit-transform: scale(1.1);
+	-moz-transform: scale(1.1);
+	-o-transform: scale(1.1);
+	background-image: -moz-linear-gradient(-45deg, #696969, #FFFFFF);
+	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.00, #696969), color-stop(1.0, #FFFFFF));
+	border: transparent;
+	background-color: transparent;
+	padding: 27px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 15pt;
+	text-align: center;
+	margin: 64px;
+	padding: inherit;
 }
 /* .slideshow-container :hover{
-    box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
-} */
+	box-shadow: 4px 4px 20px 10px white,4px 4px 20px 10px black;
+}
+*/
 .card{
-    box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
-    display: block;
-    padding: .01em;
-    position: relative;
-    text-align: center;
-    border-radius: 15px;
+	box-shadow: 4px 4px 20px 10px white, 4px 4px 20px 10px black;
+	display: block;
+	padding: .01em;
+	position: relative;
+	text-align: center;
+	border-radius: 15px;
 }
 .img{
-    box-sizing: content-box;
-    filter: grayscale(50%);
-    height: 160px;
-    overflow: hidden;
-    width: 100%;
-    border-radius: 15px;
-    
+	box-sizing: content-box;
+	filter: grayscale(50%);
+	height: 160px;
+	overflow: hidden;
+	width: 100%;
+	border-radius: 15px;
 }
 .photo-container-text{
-    box-sizing: inherit;
-    padding-bottom: 32px;
+	box-sizing: inherit;
+	padding-bottom: 32px;
 }
-
 .footer {
-    background: transparent;
-    color: ghostwhite;
-
+	background: transparent;
+	color: ghostwhite;
 }
 .fa{
-    color: ghostwhite;
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    letter-spacing: 5px;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-
+	color: ghostwhite;
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	letter-spacing: 5px;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
 }
 .social-links {
-    color: ghostwhite;
-    font-size: medium;
-    line-height: 0;
-    text-align: center;
+	color: ghostwhite;
+	font-size: medium;
+	line-height: 0;
+	text-align: center;
 }
 .social-footer {
-    background: ghostwhite;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 1rem;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
+	background: ghostwhite;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	padding: 1rem;
+	-webkit-justify-content: space-between;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
 }
-
 .social-footer .social-footer-icons li:last-of-type {
-    margin-right: 0;
+	margin-right: 0;
 }
-
 .social-footer .social-footer-icons .fa {
-    color: ghostwhite;
-    font-size: 1.3rem;
+	color: ghostwhite;
+	font-size: 1.3rem;
 }
-
 .social-footer .social-footer-icons .fa:hover {
-    color: #4a4a4a;
-    transition: color 0.3s ease-in;
+	color: #4a4a4a;
+	transition: color 0.3s ease-in;
 }
