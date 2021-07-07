@@ -118,12 +118,15 @@ body{
     color: ghostwhite;
 
 }
-
-.social-links {
+.fa{
     color: ghostwhite;
-    font-size: medium;
-    line-height: 0;
-    text-align: center;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    letter-spacing: 5px;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+
 }
 .social-links {
     color: ghostwhite;
