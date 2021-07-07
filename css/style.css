@@ -49,10 +49,10 @@ body{
 }
 /* ********************************************************** Body of Page ************************************************************ */
  .container{
-	padding:0.01em 16px;
-	padding-bottom: 2px;
+	padding:.5px;
+	padding-bottom: 0;
 	box-sizing: inherit;
-
+    position:absolute;
 }
 .slideshow-container {
 	-moz-border-radius: 15px;
