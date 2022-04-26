@@ -1,0 +1,104 @@
+## This is the default BlazeBlogger configuration file. The recommended way
+## to set up your blog is to leave  this file intact,  and use blaze-config
+## instead.  However, if you prefer to configure BlazeBlogger by hand, read
+## the instructions below,  and replace the value on the right of the equal
+## sign.
+
+## General blog settings. Available options are:
+##
+##   title         A title of your blog.
+##   subtitle      A subtitle of your blog.
+##   description   A brief description of your blog.
+##   keywords      A comma-separated list of keywords.
+##   theme         A theme for your blog. It must point to an existing file
+##                 in the .blaze/theme/ directory.
+##   style         A style sheet for your blog.  It must point to  an exis-
+##                 ting file in the .blaze/style/ directory.
+##   lang          A translation of your blog. It must point to an existing
+##                 file in the .blaze/lang/ directory.
+##   posts         A number of blog posts to be listed on a single page.
+##
+[blog]
+title=Blog Title
+subtitle=blog subtitle
+description=blog description
+keywords=blog keywords
+theme=default.html
+style=default.css
+lang=en_US
+posts=10
+
+## Color settings. Available options are:
+##
+##   list          A boolean  to enable (true) or disable (false) colors in
+##                 the blaze-list output.
+##   log           A boolean  to enable (true) or disable (false) colors in
+##                 the blaze-log output.
+##
+[color]
+list=false
+log=false
+
+## Advanced BlazeBlogger settings. Available options are:
+##
+##   doctype       A document type.  It can be  either  html  for HTML,  or
+##                 xhtml for the XHTML standard.
+##   extension     A file extension.
+##   encoding      A character encoding. It has to be in a form that is re-
+##                 cognized by W3C standards.
+##   editor        An external  text  editor.  When  supplied, this  option
+##                 overrides the system-wide settings.
+##   processor     An external application  to be used to process newly ad-
+##                 ded or edited blog posts and pages. You must supply %in%
+##                 and %out% in place of an input and output file name res-
+##                 pectively.
+##
+[core]
+doctype=html
+extension=html
+encoding=UTF-8
+editor=
+processor=
+
+## RSS feed settings. Available options are:
+##
+##  baseurl        A URL of your blog, for example "http://example.com/".
+##  posts          A number of blog posts to be listed in the feed.
+##  fullposts      A boolean to enable (true)  or disable (false) inclusion
+##                 of the whole content of a blog post in the feed.
+##
+[feed]
+baseurl=
+posts=10
+fullposts=false
+
+## Advanced post settings. Available options are:
+##
+##  author         A location of a blog post author name.  It can either be
+##                 placed above the post (top),  below it (bottom),  or no-
+##                 where on the page (none).
+##  date           A location  of a date  of publishing.  It can  either be
+##                 placed above the post (top),  below it (bottom),  or no-
+##                 where on the page (none).
+##  tags           A location of post tags. They can either be placed above
+##                 the post (top),  below it (bottom),  or  nowhere  on the
+##                 page (none).
+##
+[post]
+author=top
+date=top
+tags=top
+
+## User settings. Available options are:
+##
+##   name          Your full name to be used in the copyright notice,  and
+##                 as the default post author.
+##   nickname      Your nickname  to be used  as the  default  post author.
+##                 When supplied, this option overrides the  above setting.
+##   email         Your email address.
+##
+[user]
+name=admin
+nickname=
+email=admin@localhost
+
