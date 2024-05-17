@@ -1,81 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Stream Music Player</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lofi Music Stream</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>Live Stream Music Player</h1>
-    <div id="player"></div>
-    <div id="controls">
-        <input type="text" id="youtube-url" placeholder="Enter YouTube URL" size="40">
-        <button onclick="loadAndPlayVideo()">Load and Play</button>
-        <button onclick="pauseVideo()">Pause</button>
-    </div>
-    <img id="thumbnail" alt="Video Thumbnail">
-
-    <script>
-        var player;
-        var videoId;
-
-        // Load the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // Create an <iframe> (and YouTube player) after the API code downloads.
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            console.log('Player ready');
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                console.log('Player is playing');
-            } else if (event.data == YT.PlayerState.PAUSED) {
-                console.log('Player is paused');
-            }
-        }
-
-        function loadAndPlayVideo() {
-            var url = document.getElementById('youtube-url').value;
-            videoId = extractVideoId(url);
-            player.loadVideoById(videoId);
-
-            // Update the thumbnail
-            var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg';
-            document.getElementById('thumbnail').src = thumbnailUrl;
-        }
-
-        function pauseVideo() {
-            player.pauseVideo();
-        }
-
-        function extractVideoId(url) {
-            var videoId = '';
-            var regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^\"&?\/\s]{11})/;
-            var matches = url.match(regex);
-            if (matches) {
-                videoId = matches[1];
-            } else {
-                alert('Invalid YouTube URL');
-            }
-            return videoId;
-        }
-    </script>
+  <div class="container">
+    <h1>Lofi Music Stream</h1>
+    <input type="text" id="urlInput" placeholder="Enter YouTube URL">
+    <button onclick="loadAndPlay()">Load and Play</button>
+    <button onclick="play()">Play</button>
+    <button onclick="pause()">Pause</button>
+    <div id="thumbnail"></div>
+  </div>
+  <audio id="audioPlayer" controls></audio>
+  <script src="scripts.js"></script>
 </body>
 </html>
 
