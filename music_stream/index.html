@@ -3,58 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Music Stream</title>
+    <title>Live Stream Music Player</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
+            background-color: #f5f5f5;
         }
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        #player {
+            display: none;
+        }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         button {
+            margin: 5px;
             padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        audio {
-            width: 100%;
-            max-width: 300px;
-            margin: 20px auto;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h1>Live Music Stream</h1>
-    <input type="text" id="musicUrl" placeholder="Enter music stream URL here">
-    <button onclick="playMusic()">Play</button>
-    <audio id="audioPlayer" controls>
-        <source id="audioSource" src="" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <h1>Live Stream Music Player</h1>
+    <div id="player"></div>
+    <div id="controls">
+        <input type="text" id="youtube-url" placeholder="Enter YouTube URL" size="40">
+        <button onclick="loadVideo()">Load and Play</button>
+        <button onclick="playVideo()">Play</button>
+        <button onclick="pauseVideo()">Pause</button>
+    </div>
+
     <script>
-        function playMusic() {
-            var url = document.getElementById('musicUrl').value;
-            var audioSource = document.getElementById('audioSource');
-            var audioPlayer = document.getElementById('audioPlayer');
-            
-            audioSource.src = url;
-            audioPlayer.load();
-            audioPlayer.play();
+        var player;
+        var videoId;
+
+        // Load the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Create an <iframe> (and YouTube player) after the API code downloads.
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log("Player ready");
+        }
+
+        function onPlayerStateChange(event) {
+            console.log("Player state change:", event.data);
+        }
+
+        function loadVideo() {
+            var url = document.getElementById('youtube-url').value;
+            var videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/);
+            if (videoIdMatch && videoIdMatch[1]) {
+                videoId = videoIdMatch[1];
+                player.loadVideoById(videoId);
+                document.getElementById('player').style.display = 'block';
+            } else {
+                alert("Invalid YouTube URL");
+            }
+        }
+
+        function playVideo() {
+            player.playVideo();
+        }
+
+        function pauseVideo() {
+            player.pauseVideo();
         }
     </script>
 </body>
 </html>
+
