@@ -28,6 +28,11 @@
             padding: 10px 20px;
             font-size: 16px;
         }
+        #thumbnail {
+            margin: 20px;
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -35,10 +40,10 @@
     <div id="player"></div>
     <div id="controls">
         <input type="text" id="youtube-url" placeholder="Enter YouTube URL" size="40">
-        <button onclick="loadVideo()">Load and Play</button>
-        <button onclick="playVideo()">Play</button>
+        <button onclick="loadAndPlayVideo()">Load and Play</button>
         <button onclick="pauseVideo()">Pause</button>
     </div>
+    <img id="thumbnail" alt="Video Thumbnail">
 
     <script>
         var player;
@@ -70,20 +75,21 @@
             console.log("Player state change:", event.data);
         }
 
-        function loadVideo() {
+        function loadAndPlayVideo() {
             var url = document.getElementById('youtube-url').value;
             var videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/);
             if (videoIdMatch && videoIdMatch[1]) {
                 videoId = videoIdMatch[1];
                 player.loadVideoById(videoId);
                 document.getElementById('player').style.display = 'block';
+
+                // Update thumbnail
+                var thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                document.getElementById('thumbnail').src = thumbnailUrl;
+                document.getElementById('thumbnail').alt = `Thumbnail for ${videoId}`;
             } else {
                 alert("Invalid YouTube URL");
             }
-        }
-
-        function playVideo() {
-            player.playVideo();
         }
 
         function pauseVideo() {
