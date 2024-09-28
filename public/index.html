@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lofi Music Stream</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Happy+Monkey&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 id="webpageTitle">Lofi Music Stream</h1>
+    <div id="video-titleContainer">
+        <div id="video-title">
+            <span class="scrolling-text"></span>
+            <span class="scrolling-text"></span>
+        </div>
+    </div>
+    <div id="video-background">
+        <div id="player"></div>
+    </div>
+    <div id="controls">
+        <button id="prev" class="control-button">Previous</button>
+        <button id="next" class="control-button">Next</button>
+        <button id="play" class="control-button">Play</button>
+        <button id="pause" class="control-button">Pause</button>
+        <button id="stop" class="control-button">Stop</button>
+    </div>
+    <div id="volume">
+        <input type="range" id="volume-control" min="0" max="100" value="100">
+        <div id="volume-buttons">
+            <button id="mute" class="control-button">Mute</button>
+            <button id="unmute" class="control-button">Unmute</button>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="app.js"></script>
+</body>
+</html>

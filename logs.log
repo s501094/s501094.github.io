@@ -1,0 +1,162 @@
+
+==============================================================================
+which-key: require("which-key.health").check()
+
+- OK Most of these checks are for informational purposes only.
+  WARNINGS should be treated as a warning, and don't necessarily indicate a problem with your config.
+  Please |DON't| report these warnings as an issue.
+
+Checking your config ~
+- OK |mini.icons| is installed
+- OK |nvim-web-devicons| is installed
+
+Checking for issues with your mappings ~
+- WARNING You're using an old version of the which-key spec.
+  Your mappings will work, but it's recommended to update them to the new version.
+  Please check the docs and suggested spec below for more info.
+  Mappings: >
+  { { "<leader>c",
+      desc = "[C]ode"
+    }, { "<leader>d",
+      desc = "[D]ocument"
+    }, { "<leader>r",
+      desc = "[R]ename"
+    }, { "<leader>s",
+      desc = "[S]earch"
+    }, { "<leader>w",
+      desc = "[W]orkspace"
+    }, { "<leader>t",
+      desc = "[T]oggle"
+    }, { "<leader>h",
+      desc = "Git [H]unk"
+    },
+    prefix = "<leader>"
+  }
+  
+  -- Suggested Spec:
+  {
+    { "<leader>", desc = "<leader>c" },
+    { "<leader>", desc = "<leader>w" },
+    { "<leader>", desc = "<leader>t" },
+    { "<leader>", desc = "<leader>s" },
+    { "<leader>", desc = "<leader>d" },
+    { "<leader>", desc = "<leader>r" },
+    { "<leader>", desc = "<leader>h" },
+  }
+- WARNING overwriting desc: >
+  { "<leader>c",
+    desc = "[C]ode",
+    prefix = "<leader>"
+  }
+- WARNING overwriting desc: >
+  { "<leader>d",
+    desc = "[D]ocument",
+    prefix = "<leader>"
+  }
+- WARNING overwriting desc: >
+  { "<leader>r",
+    desc = "[R]ename",
+    prefix = "<leader>"
+  }
+- WARNING overwriting desc: >
+  { "<leader>s",
+    desc = "[S]earch",
+    prefix = "<leader>"
+  }
+- WARNING overwriting desc: >
+  { "<leader>w",
+    desc = "[W]orkspace",
+    prefix = "<leader>"
+  }
+- WARNING overwriting desc: >
+  { "<leader>t",
+    desc = "[T]oggle",
+    prefix = "<leader>"
+  }
+- WARNING overwriting desc: >
+  { "<leader>h",
+    desc = "Git [H]unk",
+    prefix = "<leader>"
+  }
+- WARNING You're using an old version of the which-key spec.
+  Your mappings will work, but it's recommended to update them to the new version.
+  Please check the docs and suggested spec below for more info.
+  Mappings: >
+  { { "<leader>h",
+      desc = "Git [H]unk",
+      mode = "v"
+    } }
+  
+  -- Suggested Spec:
+  {
+    { "", desc = "<leader>h", mode = "v" },
+  }
+- WARNING overwriting desc: >
+  { "<leader>h",
+    desc = "Git [H]unk",
+    mode = "v",
+    prefix = ""
+  }
+
+checking for overlapping keymaps ~
+- WARNING In mode `n`, <sr> overlaps with <srl>, <srn>:
+  - <sr>: Replace surrounding
+  - <srl>: Replace previous surrounding
+  - <srn>: Replace next surrounding
+- WARNING In mode `n`, <sd> overlaps with <sdl>, <sdn>:
+  - <sd>: Delete surrounding
+  - <sdl>: Delete previous surrounding
+  - <sdn>: Delete next surrounding
+- WARNING In mode `n`, <sF> overlaps with <sFl>, <sFn>:
+  - <sF>: Find left surrounding
+  - <sFl>: Find previous left surrounding
+  - <sFn>: Find next left surrounding
+- WARNING In mode `n`, <sh> overlaps with <shl>, <shn>:
+  - <sh>: Highlight surrounding
+  - <shl>: Highlight previous surrounding
+  - <shn>: Highlight next surrounding
+- WARNING In mode `n`, <sf> overlaps with <sfl>, <sfn>:
+  - <sf>: Find right surrounding
+  - <sfl>: Find previous right surrounding
+  - <sfn>: Find next right surrounding
+- WARNING In mode `n`, <gb> overlaps with <gbc>:
+  - <gb>: Comment toggle blockwise
+  - <gbc>: Comment toggle current block
+- WARNING In mode `n`, <gc> overlaps with <gco>, <gcO>, <gcc>, <gcA>:
+  - <gc>: Comment toggle linewise
+  - <gco>: Comment insert below
+  - <gcO>: Comment insert above
+  - <gcc>: Comment toggle current line
+  - <gcA>: Comment insert end of line
+- WARNING In mode `x`, <i> overlaps with <in>, <il>:
+  - <i>: Inside textobject
+  - <in>: Inside next textobject
+  - <il>: Inside last textobject
+- WARNING In mode `x`, <a> overlaps with <al>, <a%>, <an>:
+  - <a>: Around textobject
+  - <al>: Around last textobject
+  - <an>: Around next textobject
+- WARNING In mode `o`, <a> overlaps with <an>, <al>:
+  - <a>: Around textobject
+  - <an>: Around next textobject
+  - <al>: Around last textobject
+- WARNING In mode `o`, <i> overlaps with <in>, <il>:
+  - <i>: Inside textobject
+  - <in>: Inside next textobject
+  - <il>: Inside last textobject
+- OK Overlapping keymaps are only reported for informational purposes.
+  This doesn't necessarily mean there is a problem with your config.
+
+Checking for duplicate mappings ~
+- WARNING Duplicates for <<leader>> in mode `n`:
+  * <leader>h: `{}`
+  * <leader>t: `{}`
+  * <leader>w: `{}`
+  * <leader>c: `{}`
+  * <leader>d: `{}`
+  * <leader>r: `{}`
+  * <leader>s: `{}`
+- OK Duplicate mappings are only reported for informational purposes.
+  This doesn't necessarily mean there is a problem with your config.
+
+

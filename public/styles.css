@@ -1,0 +1,198 @@
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Happy Monkey", sans-serif;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: #fff;
+    text-align: center;
+}
+
+/* Title container in the top-left corner */
+#video-titleContainer {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+    width: 300px; /* Adjust as needed */
+    height: 40px; /* Adjust as needed */
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5); /* Optional */
+    padding: 5px; /* Optional */
+    border-radius: 15px; /* Optional */
+    z-index: 3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.5); /* Optional */
+}
+
+/* Scrolling title setup */
+#video-title {
+    display: flex;
+    width: max-content;
+    animation: marquee linear infinite;
+    animation-duration: 10s; /* Adjust as needed */
+
+}
+
+.scrolling-text {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 1.5em;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Keyframes for the scrolling animation */
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+#video-background {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 1;
+}
+
+#video-background #player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #fff;
+    padding: 50px;
+}
+
+#player {
+    margin-top: 50px;
+}
+
+#controls {
+    margin-top: auto;
+    z-index: 3;
+}
+
+/* Control buttons styling */
+.control-button {
+    padding: 10px 20px;
+    background-color: rgba(41, 41, 41, 0.9);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 20px;
+    transition: background-color 0.2s, box-shadow 0.3s;
+}
+
+.control-button:hover {
+    box-shadow: 0 0 10px rgba(103, 103, 103, 0.5), -10 -10 20px rgba(103, 103, 103, 0.5); /* FIX ME: REMOVE after comma Inner and outer shadow */
+    background-color: rgba(47, 47, 47, 0.5);
+    color: rgba(255, 255, 255, 1);
+}
+
+/* Volume control container */
+#volume {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Style the volume control range input */
+#volume-control {
+    -webkit-appearance: none; /* Removes default styling in WebKit browsers */
+    width: 200px; /* Adjust as needed */
+    height: 10px;
+    background: #ccc; /* Track color */
+    outline: none;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+/* WebKit browsers */
+#volume-control::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #FFD700; /* Gold thumb */
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #DAA520; /* Goldenrod border */
+}
+
+/* Mozilla browsers */
+#volume-control::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #FFD700;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #DAA520;
+}
+
+/* Microsoft Edge and IE */
+#volume-control::-ms-thumb {
+    width: 20px;
+    height: 20px;
+    background: #FFD700;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #DAA520;
+}
+
+/* Volume buttons container */
+#volume-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px; /* Space between buttons */
+    margin-top: 5px;
+}
+
+/* Ensure mute/unmute buttons have the same styling */
+#volume-buttons .control-button {
+    /* No additional styles needed since .control-button already styles them */
+}
+
+/* Other elements */
+#content,
+#controls,
+#volume-control {
+    position: relative;
+    z-index: 3;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 3;
+}
