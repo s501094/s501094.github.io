@@ -1,4 +1,5 @@
-const apiKey = 'AIzaSyByBbKXWZZgt03HqHWApMGzb3F8DOSckGQ';
+//const apiKey = 'AIzaSyByBbKXWZZgt03HqHWApMGzb3F8DOSckGQ';
+
 let player;
 const playlist = ['J2i0cZWCdq4', 'eOu74uBG7qc', 'ijpdruHDJHY', '28KRPhVzCus', '4xDzrJKXOOY', '5yx6BWlEVcY', '7NOSDKb0HlU']; // Add more video IDs
 let currentVideoIndex = 0;
@@ -86,9 +87,10 @@ function loadVideo(index) {
 
 async function fetchVideoDetails(videoId) {
 	try {
-		const response = await fetch(
-			`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${apiKey}`
-		);
+		//const response = await fetch(
+		//	`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${apiKey}`
+		//);
+		const response = await fetch(`http://75.181.32.107:3535/api/videos/${videoId}`)
 		const data = await response.json();
 		if (data.items.length > 0) {
 			const title = data.items[0].snippet.title;
