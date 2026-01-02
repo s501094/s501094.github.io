@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Math Journey • K–12 Practice Lab</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-sky-100 via-indigo-100 to-pink-100 flex items-stretch justify-center p-4 md:p-8">
+
+  <div id="loginView" class="w-full max-w-lg mx-auto my-auto">
+    <div class="bubble-bg rounded-3xl shadow-2xl border border-white/60 bg-white/80 backdrop-blur-xl p-6 md:p-8 flex flex-col gap-6">
+      <header class="flex items-center gap-3">
+        <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-400 to-pink-500 flex items-center justify-center shadow-lg">
+          <span class="text-2xl font-black text-white select-none">π</span>
+        </div>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">Math Journey</h1>
+          <p class="text-sm md:text-base text-slate-600">Sign in to track each student's K–12 math progress.</p>
+        </div>
+      </header>
+
+      <section class="space-y-5">
+        <div class="rounded-2xl bg-white/80 border border-slate-100 shadow p-4 md:p-5 flex flex-col gap-3">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Sign in</h2>
+            <p class="text-[11px] text-slate-400">Default admin: <span class="font-mono">admin / admin123</span></p>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-1">
+              <label for="loginUsername" class="text-xs font-semibold text-slate-600">Username</label>
+              <input id="loginUsername" type="text" autocomplete="username" class="px-3 py-2 rounded-2xl border border-slate-200 bg-slate-50/80 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 text-sm" placeholder="e.g., sophia3" />
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="loginPassword" class="text-xs font-semibold text-slate-600">Password</label>
+              <input id="loginPassword" type="password" autocomplete="current-password" class="px-3 py-2 rounded-2xl border border-slate-200 bg-slate-50/80 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 text-sm" placeholder="Enter password" />
+            </div>
+            <button id="loginBtn" class="mt-1 px-4 py-2 rounded-2xl bg-sky-500 text-white text-sm font-semibold shadow-md hover:bg-sky-600 active:scale-95 transition">Sign in</button>
+            <p id="loginMessage" class="min-h-[1.25rem] text-[11px] text-rose-600 font-semibold"></p>
+          </div>
+        </div>
+
+        <div class="rounded-2xl bg-sky-50/80 border border-sky-100 shadow p-4 md:p-5 flex flex-col gap-3">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Create student account</h2>
+            <span class="text-[11px] text-sky-600 font-semibold">Local device only</span>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-1">
+              <label for="registerUsername" class="text-xs font-semibold text-slate-600">Student username</label>
+              <input id="registerUsername" type="text" autocomplete="off" class="px-3 py-2 rounded-2xl border border-slate-200 bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 text-sm" placeholder="e.g., alex4" />
+            </div>
+            <div class="flex gap-3 flex-col md:flex-row">
+              <div class="flex flex-col gap-1 flex-1">
+                <label for="registerPassword" class="text-xs font-semibold text-slate-600">Password</label>
+                <input id="registerPassword" type="password" autocomplete="new-password" class="px-3 py-2 rounded-2xl border border-slate-200 bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 text-sm" placeholder="Choose a password" />
+              </div>
+              <div class="flex flex-col gap-1 flex-1">
+                <label for="registerPasswordConfirm" class="text-xs font-semibold text-slate-600">Confirm</label>
+                <input id="registerPasswordConfirm" type="password" autocomplete="new-password" class="px-3 py-2 rounded-2xl border border-slate-200 bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 text-sm" placeholder="Repeat password" />
+              </div>
+            </div>
+            <button id="registerBtn" class="mt-1 px-4 py-2 rounded-2xl bg-emerald-500 text-white text-sm font-semibold shadow-md hover:bg-emerald-600 active:scale-95 transition">Create student account</button>
+            <p id="registerMessage" class="min-h-[1.25rem] text-[11px] text-emerald-700 font-semibold"></p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="text-[11px] text-slate-500 mt-1">
+        <p>This prototype stores users and progress only on this device using private browser storage.</p>
+      </footer>
+    </div>
+  </div>
+
+  <div id="appView" class="hidden bubble-bg w-full max-w-6xl mx-auto rounded-3xl shadow-2xl border border-white/60 bg-white/70 backdrop-blur-xl p-4 md:p-8 flex flex-col gap-4 md:gap-6">
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-400 to-pink-500 flex items-center justify-center shadow-lg">
+          <span class="text-2xl font-black text-white select-none">π</span>
+        </div>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">Math Journey</h1>
+          <p class="text-sm md:text-base text-slate-600">Colorful K–12 practice with grade-perfect topics.</p>
+        </div>
+      </div>
+      <div class="flex flex-col items-end gap-2">
+        <div id="userInfoBar" class="flex items-center gap-2 text-[11px] text-slate-600">
+          <span id="currentUserLabel" class="px-2 py-1 rounded-full bg-slate-100 border border-slate-200 font-semibold">Logged in</span>
+          <button id="logoutBtn" class="px-2 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-600 font-semibold hover:bg-rose-100 text-[11px]">Log out</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="space-y-3 md:space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Grade</h2>
+            <p id="currentGradeLabel" class="text-xs text-slate-500"></p>
+          </div>
+          <div id="gradeButtons" class="flex overflow-x-auto gap-2 pb-1 scrollbar-thin"></div>
+        </div>
+
+        <div class="w-full md:w-64">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Mode</h2>
+            <p id="modeDescription" class="text-xs text-slate-500">Practice at your own pace</p>
+          </div>
+          <div class="inline-flex rounded-2xl bg-slate-100 p-1 w-full">
+            <button data-mode="practice" class="mode-button flex-1 px-2 py-1.5 text-xs md:text-sm font-semibold rounded-xl bg-white text-slate-800 shadow-sm">Practice</button>
+            <button data-mode="timed" class="mode-button flex-1 px-2 py-1.5 text-xs md:text-sm font-semibold rounded-xl text-slate-600">Timed</button>
+            <button data-mode="challenge" class="mode-button flex-1 px-2 py-1.5 text-xs md:text-sm font-semibold rounded-xl text-slate-600">Challenge Mix</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Math Area</h2>
+          <p id="topicHint" class="text-xs text-slate-500">Choose what you want to practice</p>
+        </div>
+        <div id="topicButtons" class="flex flex-wrap gap-2"></div>
+      </div>
+    </section>
+
+    <main class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 flex-1 min-h-[300px]">
+      <section class="relative rounded-3xl bg-gradient-to-br from-sky-50 via-indigo-50 to-purple-50 border border-sky-100 shadow-inner p-4 md:p-6 flex flex-col gap-4">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <p id="sessionBadge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 text-[11px] font-semibold text-sky-700 shadow-sm">
+              <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Ready to start
+            </p>
+            <h2 class="mt-2 text-lg md:text-xl font-extrabold text-slate-800 leading-tight">
+              <span id="questionTitleGrade">Grade 3</span>
+              <span class="mx-1 text-slate-400">•</span>
+              <span id="questionTitleTopic">Multiplication</span>
+            </h2>
+          </div>
+          <div class="text-right">
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Timer</p>
+            <p id="timerDisplay" class="text-xl font-black text-slate-800">∞</p>
+          </div>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-center">
+          <div class="rounded-2xl bg-white/90 border border-slate-100 shadow p-4 md:p-6 flex flex-col gap-4">
+            <p id="questionText" class="text-2xl md:text-3xl font-black text-slate-800 text-center select-none">Choose a topic to begin</p>
+            <div class="flex flex-col items-center gap-3">
+              <div id="inputModeContainer" class="flex flex-col items-center gap-3 w-full max-w-xs">
+                <input id="answerInput" type="text" inputmode="decimal" autocomplete="off" class="w-full text-center px-4 py-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 text-lg font-semibold text-slate-800 disabled:opacity-50" placeholder="Type your answer" disabled />
+                <button id="checkAnswerBtn" class="px-4 py-2 rounded-2xl bg-sky-500 text-white text-sm font-semibold shadow-md hover:bg-sky-600 disabled:opacity-50" disabled>Check answer</button>
+              </div>
+              <div id="multipleChoiceContainer" class="flex flex-col gap-2 w-full max-w-xs"></div>
+              <button id="nextQuestionBtn" class="px-4 py-2 rounded-2xl bg-white/80 text-slate-700 text-sm font-semibold border border-slate-200 disabled:opacity-50" disabled>Continue</button>
+              <p id="feedbackText" class="min-h-[1.5rem] text-sm font-semibold text-center"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="rounded-3xl bg-white/80 border border-slate-100 shadow p-4 md:p-6 flex flex-col gap-4">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Session Progress</h2>
+          <button id="resetSessionBtn" class="text-[11px] px-2 py-1 rounded-full border border-rose-200 text-rose-600 bg-rose-50/60 disabled:opacity-40" disabled>End Session</button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div class="stat-card bg-emerald-50 text-emerald-800"><p class="label">Correct</p><p id="statCorrect" class="val">0</p></div>
+          <div class="stat-card bg-sky-50 text-sky-800"><p class="label">Accuracy</p><p id="statAccuracy" class="val">0%</p></div>
+          <div class="stat-card bg-amber-50 text-amber-800"><p class="label">Streak</p><p id="statStreak" class="val">0🔥</p></div>
+        </div>
+
+        <div class="space-y-1">
+          <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div id="masteryBar" class="h-full bg-gradient-to-r from-emerald-400 to-fuchsia-500 w-0 transition-all"></div>
+          </div>
+        </div>
+
+        <div class="mt-2 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Recent sessions</h3>
+            <button id="clearHistoryBtn" class="text-[10px] text-slate-400 hover:text-rose-500">Clear</button>
+          </div>
+          <div id="sessionsList" class="flex-1 overflow-y-auto max-h-40 space-y-2 text-xs"></div>
+        </div>
+
+        <div id="adminPanel" class="mt-2 pt-3 border-t border-dashed border-slate-200 hidden flex-1 flex-col">
+          <h3 class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Admin Overview</h3>
+          <div id="adminStudentsList" class="flex-1 overflow-y-auto max-h-40 space-y-2 text-xs"></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
