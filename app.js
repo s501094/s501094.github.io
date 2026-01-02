@@ -1,184 +1,241 @@
-// --- Data configuration -------------------------------------------------
-const gradeConfig = {
-    K: { label: "Kindergarten", topics: [{ id: "counting", label: "Counting & Next Number" }, { id: "addition", label: "Addition to 10" }, { id: "subtraction", label: "Subtraction to 10" }] },
-    1: { label: "1st Grade", topics: [{ id: "addition", label: "Addition to 20" }, { id: "subtraction", label: "Subtraction to 20" }, { id: "mixed_operations", label: "Mixed Practice" }] },
-    2: { label: "2nd Grade", topics: [{ id: "addition", label: "2-digit Addition" }, { id: "subtraction", label: "2-digit Subtraction" }, { id: "multiplication", label: "Intro Multiplication" }] },
-    3: { label: "3rd Grade", topics: [{ id: "multiplication", label: "Times Tables" }, { id: "division", label: "Basic Division" }, { id: "mixed_operations", label: "Mix of 4 Ops" }] },
-    4: { label: "4th Grade", topics: [{ id: "multiplication", label: "Multi-digit ×" }, { id: "division", label: "Multi-digit ÷" }, { id: "fractions", label: "Fractions" }] },
-    5: { label: "5th Grade", topics: [{ id: "fractions", label: "Add/Sub Fractions" }, { id: "decimals", label: "Decimals" }, { id: "percentages", label: "Percents" }] },
-    6: { label: "6th Grade", topics: [{ id: "integers", label: "Integers" }, { id: "fractions", label: "Fractions" }, { id: "ratios_proportions", label: "Ratios & Rates" }] },
-    7: { label: "7th Grade", topics: [{ id: "integers", label: "Integers" }, { id: "equations_one_step", label: "1-Step Equations" }, { id: "geometry_area_perimeter", label: "Area & Perimeter" }] },
-    8: { label: "8th Grade", topics: [{ id: "equations_two_step", label: "2-Step Equations" }, { id: "linear_functions", label: "Linear Functions" }, { id: "geometry_pythagorean", label: "Pythagorean" }] },
-    9: { label: "9th Grade (Algebra I)", topics: [{ id: "equations_two_step", label: "Solve Equations" }, { id: "linear_functions", label: "Slope & Lines" }, { id: "exponents", label: "Exponents" }] },
-    10: { label: "10th Grade (Geometry)", topics: [{ id: "geometry_area_perimeter", label: "Area & Perimeter" }, { id: "geometry_pythagorean", label: "Right Triangles" }, { id: "ratios_proportions", label: "Similarity & Scale" }] },
-    11: { label: "11th Grade (Algebra II)", topics: [{ id: "quadratics", label: "Quadratics" }, { id: "exponents", label: "Exponential" }, { id: "linear_functions", label: "Functions" }] },
-    12: { label: "12th Grade (Trig & Calc)", topics: [{ id: "trigonometry_basic_angles", label: "Trig Angles" }, { id: "calculus_derivatives_basic", label: "Derivatives" }, { id: "exponents", label: "Power Rules" }] },
+const STORAGE_KEYS = {
+    USERS: "mathio_users",
+    SESSIONS: "mathio_sessions",
+    LOGGED_IN_USER: "mathio_current_user"
 };
 
-const modeConfig = {
-    practice: { label: "Practice", description: "Practice at your own pace", timed: false },
-    timed: { label: "Timed", description: "Beat the clock in short sprints", timed: true, seconds: 60 },
-    challenge: { label: "Challenge Mix", description: "Mixed questions with a 90s timer", timed: true, seconds: 90 },
-};
-
-// --- Question generators -----------------------------------------------
-function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-function makeNumeric(answer, tolerance = 0) { return { answer, isNumeric: true, tolerance }; }
-function makeText(answer) { return { answer: String(answer), isNumeric: false, tolerance: 0 }; }
-
-function isYoungerGrade(grade) {
-    if (grade === "K") return true;
-    const n = parseInt(grade, 10);
-    return !Number.isNaN(n) && n <= 3;
-}
-
-function createNumericChoices(answer, tolerance = 0) {
-    const choices = new Set();
-    choices.add(answer);
-    while (choices.size < 4) {
-        const delta = randInt(-3, 3) || 1;
-        let option = answer + delta;
-        choices.add(option);
-    }
-    return Array.from(choices).sort(() => Math.random() - 0.5);
-}
-
-function withMaybeMultipleChoiceNumeric(baseQuestion, grade) {
-    if (!isYoungerGrade(grade)) return { ...baseQuestion, type: "input" };
-    const choices = createNumericChoices(baseQuestion.answer);
-    return { ...baseQuestion, type: "mc", choices, correctIndex: choices.indexOf(baseQuestion.answer) };
-}
-
-// Generators
-function generateAdditionQuestion(grade) {
-    let a = randInt(0, grade === "K" ? 5 : 20), b = randInt(0, grade === "K" ? 5 : 20);
-    return withMaybeMultipleChoiceNumeric({ text: `${a} + ${b} = ?`, ...makeNumeric(a + b), explanation: `Sum of ${a} and ${b} is ${a + b}` }, grade);
-}
-
-function generateMultiplicationQuestion(grade) {
-    let a = randInt(0, 12), b = randInt(0, 12);
-    return withMaybeMultipleChoiceNumeric({ text: `${a} × ${b} = ?`, ...makeNumeric(a * b), explanation: `${a} times ${b} is ${a * b}` }, grade);
-}
-
-// Simplified topic map for brevity
-const topicGenerators = {
-    counting: (grade) => { const n = randInt(0, 9); return withMaybeMultipleChoiceNumeric({ text: `What is after ${n}?`, ...makeNumeric(n + 1) }, grade); },
-    addition: generateAdditionQuestion,
-    multiplication: generateMultiplicationQuestion,
-    mixed_operations: (grade) => generateAdditionQuestion(grade) // Default fallback
-};
-
-// --- State and persistence ---------------------------------------------
-const STORAGE_KEYS = { sessions: "math_journey_sessions_v2", users: "math_journey_users_v1", currentUser: "math_journey_current_user_v1" };
+const ADMIN_CREDS = { username: "skrody", pass: "toor" };
 
 const appState = {
-    grade: "3", topicId: null, mode: "practice", currentQuestion: null,
+    currentUser: null,
+    grade: "1",
+    topicId: null,
     stats: { correct: 0, total: 0, streak: 0 },
-    timer: { remaining: null, intervalId: null },
-    currentUser: null, allSessions: [], sessions: []
+    currentQuestion: null,
+    chart: null
 };
 
-// --- Helpers & UI -------------------------------------------------------
-const el = (id) => document.getElementById(id);
+// --- Authentication ---
 
-function updateStatsUI() {
-    const { correct, total, streak } = appState.stats;
-    const accuracy = total ? Math.round((correct / total) * 100) : 0;
-    el("statCorrect").textContent = correct;
-    el("statAccuracy").textContent = `${accuracy}%`;
-    el("statStreak").textContent = `${streak}🔥`;
-    el("masteryBar").style.width = `${accuracy}%`;
+function initAuth() {
+    const saved = localStorage.getItem(STORAGE_KEYS.LOGGED_IN_USER);
+    if (saved) {
+        appState.currentUser = JSON.parse(saved);
+        showApp();
+    }
+
+    document.getElementById("loginBtn").onclick = () => {
+        const u = document.getElementById("loginUsername").value.trim();
+        const p = document.getElementById("loginPassword").value;
+        const msg = document.getElementById("loginMessage");
+
+        if (u === ADMIN_CREDS.username && p === ADMIN_CREDS.pass) {
+            login({ username: u, role: "admin" });
+        } else {
+            const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+            const found = users.find(user => user.username === u && user.password === p);
+            if (found) login({ ...found, role: "student" });
+            else msg.textContent = "Invalid credentials.";
+        }
+    };
+
+    document.getElementById("registerBtn").onclick = () => {
+        const u = document.getElementById("registerUsername").value.trim();
+        const p = document.getElementById("registerPassword").value;
+        const c = document.getElementById("registerPasswordConfirm").value;
+        const msg = document.getElementById("registerMessage");
+
+        if (!u || !p) return msg.textContent = "Fill all fields.";
+        if (p !== c) return msg.textContent = "Passwords mismatch.";
+        
+        let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+        if (users.find(user => user.username === u) || u === ADMIN_CREDS.username) return msg.textContent = "Username taken.";
+
+        users.push({ username: u, password: p });
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+        msg.className = "text-emerald-600";
+        msg.textContent = "Account created! Now sign in.";
+    };
+
+    document.getElementById("logoutBtn").onclick = () => {
+        localStorage.removeItem(STORAGE_KEYS.LOGGED_IN_USER);
+        location.reload();
+    };
+}
+
+function login(user) {
+    localStorage.setItem(STORAGE_KEYS.LOGGED_IN_USER, JSON.stringify(user));
+    location.reload();
+}
+
+function showApp() {
+    document.getElementById("loginView").classList.add("hidden");
+    document.getElementById("appView").classList.remove("hidden");
+    document.getElementById("currentUserLabel").textContent = appState.currentUser.username === ADMIN_CREDS.username ? "ADMIN: SKRODY" : `STUDENT: ${appState.currentUser.username}`;
+
+    if (appState.currentUser.role === "admin") {
+        document.getElementById("studentWorkspace").classList.add("hidden");
+        document.getElementById("studentStats").classList.add("hidden");
+        document.getElementById("sidebar").classList.replace("lg:col-span-1", "lg:col-span-3");
+        initAdminDashboard();
+    } else {
+        initStudentUI();
+        renderStudentHistory();
+    }
+}
+
+// --- Admin Dashboard Logic ---
+
+function initAdminDashboard() {
+    const adminPanel = document.getElementById("adminPanel");
+    adminPanel.classList.remove("hidden");
+
+    const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+    const sessions = JSON.parse(localStorage.getItem(STORAGE_KEYS.SESSIONS) || "[]");
+    const list = document.getElementById("adminStudentsList");
+
+    users.forEach(student => {
+        const studentSessions = sessions.filter(s => s.username === student.username);
+        const card = document.createElement("div");
+        card.className = "p-4 bg-indigo-50 rounded-2xl border border-indigo-100 cursor-pointer hover:bg-indigo-100 transition";
+        card.innerHTML = `
+            <p class="font-bold text-indigo-900">${student.username}</p>
+            <p class="text-xs text-slate-500">${studentSessions.length} total sessions</p>
+        `;
+        card.onclick = () => updateProgressChart(student.username, studentSessions);
+        list.appendChild(card);
+    });
+
+    if (users.length > 0) updateProgressChart(users[0].username, sessions.filter(s => s.username === users[0].username));
+}
+
+function updateProgressChart(username, studentSessions) {
+    const ctx = document.getElementById('adminProgressChart').getContext('2d');
+    
+    // Generate last 10 days
+    const days = Array.from({length: 10}, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (9 - i));
+        return d.toISOString().split('T')[0];
+    });
+
+    const accuracyData = days.map(day => {
+        const daySessions = studentSessions.filter(s => new Date(s.timestamp).toISOString().split('T')[0] === day);
+        if (!daySessions.length) return null;
+        // Average the accuracy of all sessions on that day
+        return daySessions.reduce((acc, s) => acc + (s.correct / s.total), 0) / daySessions.length * 100;
+    });
+
+    if (appState.chart) appState.chart.destroy();
+
+    appState.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: days.map(d => d.slice(5)), // MM-DD
+            datasets: [{
+                label: `${username}'s Accuracy (%)`,
+                data: accuracyData,
+                borderColor: '#6366f1',
+                tension: 0.3,
+                fill: true,
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                spanGaps: true
+            }]
+        },
+        options: {
+            scales: { y: { min: 0, max: 100 } }
+        }
+    });
+}
+
+// --- Student Practice Logic ---
+
+function initStudentUI() {
+    const gradeContainer = document.getElementById("gradeButtons");
+    ["1", "2", "3", "4", "5", "6", "7", "8"].forEach(g => {
+        const btn = document.createElement("button");
+        btn.textContent = `Grade ${g}`;
+        btn.className = "px-4 py-1 bg-white border border-slate-200 rounded-full text-xs font-bold shrink-0";
+        btn.onclick = () => { appState.grade = g; };
+        gradeContainer.appendChild(btn);
+    });
+
+    const topicContainer = document.getElementById("topicButtons");
+    ["Addition", "Subtraction", "Multiplication", "Division"].forEach(t => {
+        const btn = document.createElement("button");
+        btn.textContent = t;
+        btn.className = "px-4 py-2 bg-sky-100 rounded-xl text-xs font-bold";
+        btn.onclick = () => startSession(t);
+        topicContainer.appendChild(btn);
+    });
+
+    document.getElementById("checkAnswerBtn").onclick = checkAnswer;
+}
+
+function startSession(topic) {
+    appState.topicId = topic;
+    appState.stats = { correct: 0, total: 0, streak: 0 };
+    document.getElementById("inputModeContainer").classList.remove("hidden");
+    generateQuestion();
 }
 
 function generateQuestion() {
-    if (!appState.topicId) return;
-    const gen = topicGenerators[appState.topicId] || topicGenerators['addition'];
-    const q = gen(appState.grade);
-    appState.currentQuestion = q;
-    el("questionText").textContent = q.text;
-    el("answerInput").value = "";
-    el("feedbackText").textContent = "";
-    el("nextQuestionBtn").disabled = true;
-
-    if (q.type === "mc") {
-        el("inputModeContainer").classList.add("hidden");
-        el("multipleChoiceContainer").innerHTML = "";
-        q.choices.forEach((choice, i) => {
-            const btn = document.createElement("button");
-            btn.className = "w-full px-4 py-2 rounded-2xl border bg-white text-sm font-semibold";
-            btn.textContent = choice;
-            btn.onclick = () => handleAnswer(i);
-            el("multipleChoiceContainer").appendChild(btn);
-        });
-    } else {
-        el("inputModeContainer").classList.remove("hidden");
-        el("answerInput").disabled = false;
-        el("checkAnswerBtn").disabled = false;
-    }
+    const a = Math.floor(Math.random() * 10), b = Math.floor(Math.random() * 10);
+    appState.currentQuestion = { text: `${a} + ${b} = ?`, answer: a + b };
+    document.getElementById("questionText").textContent = appState.currentQuestion.text;
+    document.getElementById("answerInput").value = "";
+    document.getElementById("feedbackText").textContent = "";
 }
 
-function handleAnswer(provided) {
-    const q = appState.currentQuestion;
-    let isCorrect = false;
-    if (q.type === "mc") {
-        isCorrect = provided === q.correctIndex;
-    } else {
-        isCorrect = parseInt(el("answerInput").value) === q.answer;
-    }
-
+function checkAnswer() {
+    const val = parseInt(document.getElementById("answerInput").value);
+    const correct = val === appState.currentQuestion.answer;
+    
     appState.stats.total++;
-    if (isCorrect) {
+    if (correct) {
         appState.stats.correct++;
         appState.stats.streak++;
-        el("feedbackText").textContent = "Correct!";
-        el("feedbackText").className = "text-emerald-600 font-bold";
-        el("nextQuestionBtn").disabled = false;
+        document.getElementById("feedbackText").className = "text-emerald-600";
+        document.getElementById("feedbackText").textContent = "Correct!";
+        saveSession();
+        generateQuestion();
     } else {
         appState.stats.streak = 0;
-        el("feedbackText").textContent = `Wrong! Answer was ${q.answer}`;
-        el("feedbackText").className = "text-rose-600 font-bold";
+        document.getElementById("feedbackText").className = "text-rose-600";
+        document.getElementById("feedbackText").textContent = "Try again!";
     }
     updateStatsUI();
 }
 
-// --- Initialization ----------------------------------------------------
-function init() {
-    // Grade buttons
-    const grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
-    grades.forEach(g => {
-        const btn = document.createElement("button");
-        btn.textContent = g;
-        btn.className = "grade-btn px-3 py-1 bg-white/60 rounded-xl text-sm font-bold";
-        btn.onclick = () => { appState.grade = g; generateQuestion(); };
-        el("gradeButtons").appendChild(btn);
-    });
-
-    // Simple login toggle for demo
-    el("loginBtn").onclick = () => {
-        appState.currentUser = { username: el("loginUsername").value || "Student" };
-        el("loginView").classList.add("hidden");
-        el("appView").classList.remove("hidden");
-        el("currentUserLabel").textContent = appState.currentUser.username;
-    };
-
-    el("logoutBtn").onclick = () => location.reload();
-
-    // Topic Selection logic
-    const topicList = gradeConfig["3"].topics; // Defaulting to grade 3 for demo buttons
-    topicList.forEach(t => {
-        const btn = document.createElement("button");
-        btn.textContent = t.label;
-        btn.className = "px-4 py-2 bg-sky-100 rounded-full text-xs font-bold";
-        btn.onclick = () => { 
-            appState.topicId = t.id; 
-            el("resetSessionBtn").disabled = false;
-            generateQuestion(); 
-        };
-        el("topicButtons").appendChild(btn);
-    });
-
-    el("checkAnswerBtn").onclick = () => handleAnswer();
-    el("nextQuestionBtn").onclick = () => generateQuestion();
+function updateStatsUI() {
+    document.getElementById("statCorrect").textContent = appState.stats.correct;
+    document.getElementById("statStreak").textContent = appState.stats.streak;
 }
 
-init();
+function saveSession() {
+    const sessions = JSON.parse(localStorage.getItem(STORAGE_KEYS.SESSIONS) || "[]");
+    sessions.push({
+        username: appState.currentUser.username,
+        grade: appState.grade,
+        topic: appState.topicId,
+        correct: appState.stats.correct,
+        total: appState.stats.total,
+        timestamp: Date.now()
+    });
+    localStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
+    renderStudentHistory();
+}
+
+function renderStudentHistory() {
+    const sessions = JSON.parse(localStorage.getItem(STORAGE_KEYS.SESSIONS) || "[]");
+    const mine = sessions.filter(s => s.username === appState.currentUser.username).reverse().slice(0, 5);
+    const list = document.getElementById("sessionsList");
+    list.innerHTML = mine.map(s => `
+        <div class="text-[10px] p-2 bg-white/50 rounded-lg border border-slate-100 flex justify-between">
+            <span>${s.topic} (G${s.grade})</span>
+            <span class="font-bold">${s.correct}/${s.total}</span>
+        </div>
+    `).join('');
+}
+
+initAuth();
