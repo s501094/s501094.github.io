@@ -1,7 +1,7 @@
-const DB_KEYS = { USERS: "mathio_users", SESSIONS: "mathio_sessions", CURRENT: "mathio_now" };
-const ADMIN = { user: "skrody", pass: "toor" };
+const DB = { USERS: "mathio_u", SESSIONS: "mathio_s", NOW: "mathio_login" };
+const ADMIN_ACC = { username: "skrody", password: "toor" };
 
-let state = {
+let app = {
     user: null,
     grade: "1",
     topic: null,
@@ -10,32 +10,33 @@ let state = {
     chart: null
 };
 
-// --- AUTHENTICATION ---
-
+// --- AUTH LOGIC ---
 function init() {
-    const saved = localStorage.getItem(DB_KEYS.CURRENT);
-    if (saved) {
-        state.user = JSON.parse(saved);
+    const session = localStorage.getItem(DB.NOW);
+    if (session) {
+        app.user = JSON.parse(session);
         renderApp();
     }
 
-    // Login logic - SECURITY BLOCK ADDED
     document.getElementById("loginBtn").onclick = () => {
         const u = document.getElementById("loginUsername").value.trim();
         const p = document.getElementById("loginPassword").value;
         const err = document.getElementById("loginError");
 
-        if (u === ADMIN.user && p === ADMIN.pass) {
-            doLogin({ username: u, role: "admin" });
+        // Admin Bypass
+        if (u === ADMIN_ACC.username && p === ADMIN_ACC.password) {
+            login({ username: u, role: "admin" });
+            return;
+        }
+
+        // Student Check
+        const users = JSON.parse(localStorage.getItem(DB.USERS) || "[]");
+        const found = users.find(x => x.username === u && x.password === p);
+        
+        if (found) {
+            login({ ...found, role: "student" });
         } else {
-            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || "[]");
-            const found = users.find(x => x.username === u && x.password === p);
-            
-            if (found) {
-                doLogin({ ...found, role: "student" });
-            } else {
-                err.textContent = "Account not found or wrong password.";
-            }
+            err.textContent = "Account not found or invalid password.";
         }
     };
 
@@ -44,181 +45,201 @@ function init() {
         const p = document.getElementById("regPass").value;
         const msg = document.getElementById("regMessage");
         
-        if (!u || !p) return msg.textContent = "Fill all fields.";
-        let users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || "[]");
-        if (users.find(x => x.username === u) || u === ADMIN.user) return msg.textContent = "Username taken.";
+        if (!u || !p) return msg.textContent = "Please fill in all fields.";
+        let users = JSON.parse(localStorage.getItem(DB.USERS) || "[]");
+        if (users.find(x => x.username === u) || u === ADMIN_ACC.username) return msg.textContent = "Username taken.";
 
         users.push({ username: u, password: p });
-        localStorage.setItem(DB_KEYS.USERS, JSON.stringify(users));
+        localStorage.setItem(DB.USERS, JSON.stringify(users));
         msg.className = "text-[11px] font-bold text-center text-emerald-600";
-        msg.textContent = "Registered! Now login above.";
+        msg.textContent = "Account created! You can now Sign In.";
     };
 
     document.getElementById("logoutBtn").onclick = () => {
-        localStorage.removeItem(DB_KEYS.CURRENT);
+        localStorage.removeItem(DB.NOW);
         location.reload();
     };
 
     document.getElementById("wipeBtn").onclick = () => {
-        if(confirm("Wipe all student data?")) {
-            localStorage.removeItem(DB_KEYS.USERS);
-            localStorage.removeItem(DB_KEYS.SESSIONS);
+        if(confirm("Permanently wipe all student data?")) {
+            localStorage.removeItem(DB.USERS);
+            localStorage.removeItem(DB.SESSIONS);
             location.reload();
         }
     };
 }
 
-function doLogin(userObj) {
-    localStorage.setItem(DB_KEYS.CURRENT, JSON.stringify(userObj));
+function login(obj) {
+    localStorage.setItem(DB.NOW, JSON.stringify(obj));
     location.reload();
 }
 
-// --- VIEW CONTROLLER ---
-
+// --- APP CONTROLLER ---
 function renderApp() {
     document.getElementById("loginView").classList.add("hidden");
     document.getElementById("appView").classList.remove("hidden");
-    document.getElementById("userDisplay").textContent = state.user.username.toUpperCase();
+    document.getElementById("userDisplay").textContent = app.user.username;
 
-    if (state.user.role === "admin") {
-        renderAdmin();
+    if (app.user.role === "admin") {
+        renderAdminUI();
     } else {
-        renderStudent();
+        renderStudentUI();
     }
 }
 
-// --- STUDENT LOGIC ---
-
-function renderStudent() {
+// --- STUDENT VIEW ---
+function renderStudentUI() {
     document.getElementById("studentView").classList.remove("hidden");
-    renderGradeButtons();
-    renderTopicButtons();
+    drawGradeSelectors();
+    drawTopicSelectors();
 
-    document.getElementById("checkBtn").onclick = checkAnswer;
-    document.getElementById("nextBtn").onclick = nextQuestion;
+    document.getElementById("checkBtn").onclick = verifyAnswer;
+    document.getElementById("nextBtn").onclick = generateNewQuestion;
 }
 
-function renderGradeButtons() {
-    const area = document.getElementById("gradeArea");
-    area.innerHTML = "";
+function drawGradeSelectors() {
+    const box = document.getElementById("gradeArea");
+    box.innerHTML = "";
     ["1", "2", "3", "4", "5", "6", "7", "8"].forEach(g => {
         const b = document.createElement("button");
         b.textContent = `Grade ${g}`;
-        b.className = `px-4 py-1 rounded-full text-xs font-bold border border-slate-200 transition shrink-0 ${state.grade === g ? 'active-btn' : 'bg-white'}`;
-        b.onclick = () => { state.grade = g; renderGradeButtons(); };
-        area.appendChild(b);
+        b.className = `px-5 py-2 rounded-2xl text-xs font-bold border transition-all shrink-0 ${app.grade === g ? 'active-selection shadow-lg' : 'bg-white text-slate-500 border-slate-100 hover:border-sky-300'}`;
+        b.onclick = () => { app.grade = g; drawGradeSelectors(); if(app.topic) generateNewQuestion(); };
+        box.appendChild(b);
     });
 }
 
-function renderTopicButtons() {
-    const area = document.getElementById("topicArea");
-    area.innerHTML = "";
+function drawTopicSelectors() {
+    const box = document.getElementById("topicArea");
+    box.innerHTML = "";
     ["Addition", "Subtraction", "Multiplication", "Division"].forEach(t => {
         const b = document.createElement("button");
         b.textContent = t;
-        b.className = `px-6 py-2 rounded-xl text-xs font-bold border transition ${state.topic === t ? 'active-btn' : 'bg-sky-50 text-sky-700 border-sky-100'}`;
-        b.onclick = () => { state.topic = t; renderTopicButtons(); startPractice(); };
-        area.appendChild(b);
+        b.className = `px-8 py-3 rounded-2xl text-xs font-black border transition-all ${app.topic === t ? 'active-selection shadow-lg' : 'bg-white text-slate-400 border-slate-100 hover:border-sky-300'}`;
+        b.onclick = () => { app.topic = t; drawTopicSelectors(); startPracticeFlow(); };
+        box.appendChild(b);
     });
 }
 
-function startPractice() {
+function startPracticeFlow() {
     document.getElementById("workArea").classList.remove("hidden");
-    nextQuestion();
+    generateNewQuestion();
 }
 
-function nextQuestion() {
-    const a = Math.floor(Math.random() * 12), b = Math.floor(Math.random() * 12);
-    state.q = { a, b, ans: a + b }; // Example logic, extend based on topic
-    document.getElementById("qText").textContent = `${a} + ${b} = ?`;
+function generateNewQuestion() {
+    const a = Math.floor(Math.random() * 12) + 1;
+    const b = Math.floor(Math.random() * 12) + 1;
+    
+    // Simple math logic per subject
+    let ans = a + b;
+    let sym = "+";
+    if (app.topic === "Subtraction") { ans = a + b - a; sym = "-"; app.q = { a: a+b, b: a, ans: b }; }
+    else if (app.topic === "Multiplication") { ans = a * b; sym = "×"; }
+    else if (app.topic === "Division") { ans = a; sym = "÷"; app.q = { a: a*b, b: b, ans: a }; }
+    else { app.q = { a, b, ans, sym: "+" }; }
+
+    if(app.topic !== "Subtraction" && app.topic !== "Division") {
+        app.q = { a, b, ans, sym };
+    }
+
+    document.getElementById("qText").textContent = `${app.q.a} ${app.q.sym} ${app.q.b} = ?`;
     document.getElementById("ansIn").value = "";
     document.getElementById("ansIn").disabled = false;
+    document.getElementById("ansIn").focus();
     document.getElementById("feedback").textContent = "";
     document.getElementById("checkBtn").classList.remove("hidden");
     document.getElementById("nextBtn").classList.add("hidden");
 }
 
-function checkAnswer() {
-    const userVal = parseInt(document.getElementById("ansIn").value);
-    const correct = userVal === state.q.ans;
-    const feed = document.getElementById("feedback");
+function verifyAnswer() {
+    const input = parseInt(document.getElementById("ansIn").value);
+    const correct = input === app.q.ans;
+    const feedback = document.getElementById("feedback");
 
     document.getElementById("ansIn").disabled = true;
     document.getElementById("checkBtn").classList.add("hidden");
     document.getElementById("nextBtn").classList.remove("hidden");
 
     if (correct) {
-        state.stats.correct++;
-        state.stats.streak++;
-        feed.textContent = "✓ Excellent!";
-        feed.className = "text-emerald-500 font-bold";
-        logSession(true);
+        app.stats.correct++;
+        app.stats.streak++;
+        feedback.textContent = "✓ Perfect! Well done.";
+        feedback.className = "text-emerald-500 font-bold animate-bounce";
+        saveProgress(true);
     } else {
-        state.stats.streak = 0;
-        feed.textContent = `✗ Not quite. Correct answer: ${state.q.ans}`;
-        feed.className = "text-rose-500 font-bold";
-        logSession(false);
+        app.stats.streak = 0;
+        feedback.textContent = `✗ Not quite. The answer was ${app.q.ans}`;
+        feedback.className = "text-rose-500 font-bold";
+        saveProgress(false);
     }
-    document.getElementById("sCorrect").textContent = state.stats.correct;
-    document.getElementById("sStreak").textContent = state.stats.streak;
+    document.getElementById("sCorrect").textContent = app.stats.correct;
+    document.getElementById("sStreak").textContent = app.stats.streak;
 }
 
-function logSession(isCorrect) {
-    const sessions = JSON.parse(localStorage.getItem(DB_KEYS.SESSIONS) || "[]");
-    sessions.push({
-        user: state.user.username,
-        date: new Date().toISOString().split('T')[0],
-        correct: isCorrect ? 1 : 0,
-        total: 1,
-        timestamp: Date.now()
+function saveProgress(isCorrect) {
+    const data = JSON.parse(localStorage.getItem(DB.SESSIONS) || "[]");
+    data.push({
+        u: app.user.username,
+        d: new Date().toISOString().split('T')[0],
+        c: isCorrect ? 1 : 0,
+        ts: Date.now()
     });
-    localStorage.setItem(DB_KEYS.SESSIONS, JSON.stringify(sessions));
+    localStorage.setItem(DB.SESSIONS, JSON.stringify(data));
 }
 
-// --- ADMIN LOGIC ---
-
-function renderAdmin() {
+// --- ADMIN VIEW ---
+function renderAdminUI() {
     document.getElementById("adminView").classList.remove("hidden");
-    const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || "[]");
+    const users = JSON.parse(localStorage.getItem(DB.USERS) || "[]");
     const list = document.getElementById("adminStudentList");
     list.innerHTML = "";
 
     users.forEach(u => {
         const b = document.createElement("button");
-        b.textContent = u.username;
-        b.className = "w-full text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-sky-500 font-bold text-sm transition";
-        b.onclick = () => showStudentDetail(u.username);
+        b.innerHTML = `<span class="text-slate-800">${u.username}</span>`;
+        b.className = "w-full text-left px-5 py-4 rounded-2xl bg-white border border-slate-100 hover:border-sky-400 hover:shadow-md font-bold text-sm transition-all";
+        b.onclick = () => loadStudentChart(u.username);
         list.appendChild(b);
     });
 }
 
-function showStudentDetail(name) {
-    document.getElementById("adminStudentName").textContent = `Progress: ${name}`;
-    const all = JSON.parse(localStorage.getItem(DB_KEYS.SESSIONS) || "[]");
-    const mine = all.filter(x => x.user === name);
+function loadStudentChart(name) {
+    document.getElementById("adminStudentName").textContent = name;
+    const history = JSON.parse(localStorage.getItem(DB.SESSIONS) || "[]").filter(x => x.u === name);
     
-    // Graph Logic (Last 10 days)
     const days = Array.from({length: 10}, (_, i) => {
         const d = new Date();
         d.setDate(d.getDate() - (9 - i));
         return d.toISOString().split('T')[0];
     });
 
-    const data = days.map(day => {
-        const hits = mine.filter(m => m.date === day);
-        if(!hits.length) return null;
-        return (hits.filter(h => h.correct === 1).length / hits.length) * 100;
+    const stats = days.map(day => {
+        const sessions = history.filter(h => h.d === day);
+        if(!sessions.length) return null;
+        return (sessions.filter(s => s.c === 1).length / sessions.length) * 100;
     });
 
     const ctx = document.getElementById('adminChart').getContext('2d');
-    if(state.chart) state.chart.destroy();
-    state.chart = new Chart(ctx, {
+    if(app.chart) app.chart.destroy();
+    app.chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: days.map(d => d.slice(5)),
-            datasets: [{ label: 'Accuracy %', data: data, borderColor: '#0ea5e9', tension: 0.3, spanGaps: true }]
+            datasets: [{ 
+                label: 'Avg Accuracy (%)', 
+                data: stats, 
+                borderColor: '#0ea5e9', 
+                backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                tension: 0.4, 
+                fill: true,
+                spanGaps: true 
+            }]
         },
-        options: { scales: { y: { min: 0, max: 100 } } }
+        options: { 
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { min: 0, max: 100 } } 
+        }
     });
 }
 
