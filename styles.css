@@ -4,20 +4,20 @@
 }
 
 .input-field {
-    @apply px-4 py-3 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:ring-4 focus:ring-sky-100 focus:border-sky-400 transition-all text-sm w-full shadow-sm;
+    @apply px-5 py-3 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:ring-4 focus:ring-sky-100 focus:border-sky-400 transition-all text-sm w-full shadow-sm;
 }
 
 .btn-primary {
-    @apply px-6 py-2 rounded-2xl bg-sky-500 text-white font-bold hover:bg-sky-600 transition-all active:scale-95 shadow-lg shadow-sky-200;
+    @apply px-8 py-3 rounded-2xl bg-sky-500 text-white font-black hover:bg-sky-600 transition-all active:scale-95 shadow-lg shadow-sky-100;
 }
 
 .btn-secondary {
-    @apply px-6 py-2 rounded-2xl bg-emerald-500 text-white font-bold hover:bg-emerald-600 transition-all active:scale-95 shadow-lg shadow-emerald-200;
+    @apply px-8 py-3 rounded-2xl bg-emerald-500 text-white font-black hover:bg-emerald-600 transition-all active:scale-95 shadow-lg shadow-emerald-100;
 }
 
-/* HIGH-CONTRAST SELECTION HIGHLIGHT */
+/* HIGH-CONTRAST SELECTION */
 .active-selection {
-    @apply bg-sky-500 text-white border-sky-600 shadow-lg scale-105;
+    @apply bg-slate-800 text-white border-slate-900 shadow-xl scale-105 !important;
 }
 
 .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }

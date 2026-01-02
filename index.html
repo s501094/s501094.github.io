@@ -10,55 +10,49 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-sky-100 via-indigo-100 to-pink-100 p-4 md:p-8 flex justify-center items-start">
 
-    <div id="loginView" class="w-full max-w-lg mx-auto my-auto transition-all duration-500">
-        <div class="bubble-bg rounded-3xl shadow-2xl border border-white/60 bg-white/80 backdrop-blur-xl p-6 md:p-8 flex flex-col gap-6">
+    <div id="loginView" class="w-full max-w-lg mx-auto my-auto">
+        <div class="bubble-bg rounded-3xl shadow-2xl border border-white/60 bg-white/80 backdrop-blur-xl p-8 flex flex-col gap-6">
             <header class="flex items-center gap-3">
-                <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-400 to-pink-500 flex items-center justify-center shadow-lg">
-                    <span class="text-2xl font-black text-white select-none">M</span>
+                <div class="h-12 w-12 rounded-2xl bg-sky-500 flex items-center justify-center shadow-lg">
+                    <span class="text-2xl font-black text-white">M</span>
                 </div>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">Mathio</h1>
-                    <p class="text-sm text-slate-600">Sign in to track math progress.</p>
-                </div>
+                <h1 class="text-2xl font-black text-slate-800">Mathio</h1>
             </header>
 
-            <section class="space-y-5">
-                <div class="rounded-2xl bg-white/80 border border-slate-100 shadow p-4 md:p-5 flex flex-col gap-3">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Sign In</h2>
+            <div class="space-y-4">
+                <div class="flex flex-col gap-3 p-5 bg-white/50 rounded-2xl border border-slate-200">
+                    <h2 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Sign In</h2>
                     <input id="loginUsername" type="text" class="input-field" placeholder="Username">
                     <input id="loginPassword" type="password" class="input-field" placeholder="Password">
-                    <button id="loginBtn" class="btn-primary py-3">Sign In</button>
+                    <button id="loginBtn" class="btn-primary">Login</button>
                     <p id="loginError" class="text-[11px] text-rose-600 font-bold text-center h-4"></p>
                 </div>
-
-                <div class="rounded-2xl bg-sky-50/80 border border-sky-100 shadow p-4 md:p-5 flex flex-col gap-3">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-sky-600 text-center">New Student Account</h2>
-                    <input id="regUser" type="text" class="input-field" placeholder="Student username">
-                    <div class="flex gap-2">
-                        <input id="regPass" type="password" class="input-field flex-1" placeholder="Password">
+                
+                <div class="p-5 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                    <h2 class="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3 text-center">New Student?</h2>
+                    <div class="flex flex-col gap-3">
+                        <input id="regUser" type="text" class="input-field" placeholder="Create Username">
+                        <input id="regPass" type="password" class="input-field" placeholder="Create Password">
+                        <button id="regBtn" class="btn-secondary">Register</button>
+                        <p id="regMessage" class="text-[11px] font-bold text-center h-4"></p>
                     </div>
-                    <button id="regBtn" class="btn-secondary py-3">Create Student Account</button>
-                    <p id="regMessage" class="text-[11px] font-bold text-center h-4"></p>
                 </div>
-            </section>
+            </div>
         </div>
     </div>
 
     <div id="appView" class="hidden w-full max-w-6xl mx-auto flex flex-col gap-6">
-        <header class="flex justify-between items-center bg-white/60 p-4 rounded-2xl backdrop-blur-md border border-white/40 shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-xl bg-sky-500 flex items-center justify-center text-white font-black">M</div>
-                <h1 class="text-xl font-black text-slate-800">Mathio</h1>
-            </div>
+        <header class="flex justify-between items-center bg-white/40 p-4 rounded-2xl backdrop-blur-md border border-white/50 shadow-sm">
+            <h1 class="text-2xl font-black text-slate-800">Mathio</h1>
             <div class="flex items-center gap-4">
-                <span id="userDisplay" class="text-[11px] font-black uppercase tracking-tighter px-3 py-1 bg-white rounded-full border border-slate-200 text-slate-500"></span>
+                <span id="userDisplay" class="text-[10px] font-black tracking-widest px-4 py-2 bg-white rounded-full border border-slate-200 text-slate-500 shadow-sm"></span>
                 <button id="logoutBtn" class="text-xs font-bold text-rose-500 hover:bg-rose-50 px-3 py-1 rounded-full transition">Log Out</button>
             </div>
         </header>
 
-        <div id="studentView" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white/70 p-6 rounded-3xl border border-white/60 shadow-lg space-y-6">
+        <div id="studentView" class="hidden grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-3 space-y-6">
+                <div class="bg-white/80 p-8 rounded-3xl border border-white shadow-xl space-y-6">
                     <div>
                         <p class="text-[10px] font-black uppercase text-slate-400 mb-3 tracking-widest">1. Select Grade</p>
                         <div id="gradeArea" class="flex gap-2 overflow-x-auto pb-2 scrollbar-thin"></div>
@@ -69,29 +63,31 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-3xl shadow-2xl border border-white text-center space-y-8 min-h-[400px] flex flex-col justify-center">
-                    <h2 id="qText" class="text-5xl font-black text-slate-800">Ready?</h2>
+                <div class="bg-white p-12 rounded-[40px] shadow-2xl border border-white text-center space-y-8 min-h-[400px] flex flex-col justify-center">
+                    <h2 id="qText" class="text-6xl font-black text-slate-800">Pick a topic!</h2>
                     <div id="workArea" class="hidden space-y-6">
-                        <input id="ansIn" type="number" class="w-48 text-center text-5xl font-black p-4 rounded-3xl border-4 border-slate-100 focus:border-sky-400 transition-all outline-none bg-slate-50">
+                        <input id="ansIn" type="number" class="w-40 text-center text-5xl font-black p-5 rounded-[2rem] border-4 border-slate-100 focus:border-sky-500 outline-none shadow-inner bg-slate-50 transition-all">
                         <div class="flex justify-center gap-4">
-                            <button id="checkBtn" class="btn-primary px-12 py-4 text-lg">Check Answer</button>
+                            <button id="checkBtn" class="btn-primary px-12 py-4 text-lg">Check</button>
                             <button id="nextBtn" class="btn-secondary hidden px-12 py-4 text-lg">Continue</button>
                         </div>
-                        <p id="feedback" class="text-xl font-bold min-h-[2rem]"></p>
+                        <p id="feedback" class="text-xl font-bold min-h-[1.5rem]"></p>
                     </div>
                 </div>
             </div>
 
-            <aside class="bg-white/80 p-6 rounded-3xl border border-white shadow-xl flex flex-col gap-6">
-                <h3 class="text-xs font-black uppercase text-slate-400 tracking-widest">Performance</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-sky-50 p-4 rounded-2xl text-center border border-sky-100">
-                        <p class="text-3xl font-black text-sky-600" id="sCorrect">0</p>
-                        <p class="text-[9px] uppercase font-bold text-sky-400">Total Correct</p>
-                    </div>
-                    <div class="bg-amber-50 p-4 rounded-2xl text-center border border-amber-100">
-                        <p class="text-3xl font-black text-amber-600" id="sStreak">0</p>
-                        <p class="text-[9px] uppercase font-bold text-amber-400">Current Streak</p>
+            <aside class="space-y-6 lg:col-span-1">
+                <div class="bg-white/80 p-8 rounded-3xl border border-white shadow-xl flex flex-col gap-6">
+                    <h3 class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Session Stats</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-sky-50 p-6 rounded-2xl text-center border border-sky-100 shadow-sm">
+                            <p class="text-4xl font-black text-sky-600" id="sCorrect">0</p>
+                            <p class="text-[10px] uppercase font-bold text-sky-400 mt-1">Correct</p>
+                        </div>
+                        <div class="bg-amber-50 p-6 rounded-2xl text-center border border-amber-100 shadow-sm">
+                            <p class="text-4xl font-black text-amber-600" id="sStreak">0</p>
+                            <p class="text-[10px] uppercase font-bold text-amber-400 mt-1">Streak</p>
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -99,23 +95,21 @@
 
         <div id="adminView" class="hidden grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div class="lg:col-span-1 bg-white/80 p-6 rounded-3xl border border-white shadow-xl flex flex-col gap-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xs font-black uppercase text-slate-400">Student List</h3>
-                    <button id="wipeBtn" class="text-[9px] bg-rose-500 text-white px-2 py-1 rounded-lg hover:bg-rose-600">Reset Data</button>
+                <div class="flex justify-between items-center px-2">
+                    <h3 class="text-[10px] font-black uppercase text-slate-400">Students</h3>
+                    <button id="wipeBtn" class="text-[9px] bg-rose-500 text-white px-2 py-1 rounded-lg font-bold">WIPE ALL</button>
                 </div>
-                <div id="adminStudentList" class="space-y-2 overflow-y-auto max-h-[500px] pr-2 scrollbar-thin"></div>
+                <div id="adminStudentList" class="space-y-2 overflow-y-auto max-h-[600px] scrollbar-thin"></div>
             </div>
 
             <div class="lg:col-span-3 space-y-6">
-                <div class="bg-white p-8 rounded-3xl shadow-xl border border-white space-y-6">
-                    <header class="flex justify-between items-end">
-                        <div>
-                            <p class="text-[10px] font-black uppercase text-sky-500">Student Analytics</p>
-                            <h3 id="adminStudentName" class="text-3xl font-black text-slate-800">Select a student</h3>
-                        </div>
-                    </header>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                        <canvas id="adminChart" height="120"></canvas>
+                <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-white">
+                    <div class="mb-8">
+                        <p class="text-[10px] font-black uppercase text-sky-500 tracking-widest mb-1">Performance Insight</p>
+                        <h3 id="adminStudentName" class="text-3xl font-black text-slate-800">Select a student</h3>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                        <canvas id="adminChart" height="140"></canvas>
                     </div>
                 </div>
             </div>
