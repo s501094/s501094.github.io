@@ -15,9 +15,10 @@
     @apply px-4 py-2 rounded-xl bg-emerald-500 text-white font-bold hover:bg-emerald-600 transition active:scale-95;
 }
 
+/* Active Highlight Classes */
+.active-btn {
+    @apply bg-sky-600 text-white border-sky-700 shadow-inner scale-95;
+}
+
 .scrollbar-thin::-webkit-scrollbar { height: 4px; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-canvas {
-    max-width: 100% !important;
-}
