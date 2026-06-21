@@ -1,0 +1,432 @@
+<!--
+  ============================================================
+   ADMIN.HTML — The Owner's Control Panel
+  ============================================================
+
+   This page is ONLY accessible after successful GitHub login.
+   If you try to open it without being logged in, admin.js
+   immediately redirects you to index.html (the public site).
+
+   WHAT'S ON THIS PAGE (all in one HTML file, shown/hidden by JS):
+   ┌──────────────────────────────────────────────────────────┐
+   │  AUTH GUARD      Full-screen loading overlay during      │
+   │                  identity verification                    │
+   ├──────────────────────────────────────────────────────────┤
+   │  SIDEBAR         Navigation + owner badge + theme switch │
+   ├──────────────────────────────────────────────────────────┤
+   │  VIEW: POSTS     Grid of all posts with Edit/Delete      │
+   │  VIEW: POST      Single post detail with admin toolbar   │
+   │  VIEW: WRITE     Full Markdown editor with media toolbar │
+   │  VIEW: AI ASSIST Brain-dump → Claude → full blog post    │
+   │  VIEW: SETTINGS  API key, theme, notifications, data     │
+   └──────────────────────────────────────────────────────────┘
+
+   SCRIPT LOADING ORDER (bottom of body, order matters):
+   marked.min.js → used by markdown.js
+   store.js      → data layer (used by all others)
+   themes.js     → needs Store to load saved theme
+   ai.js         → needs Store for API key + Themes for theme switching
+   markdown.js   → uses the globally available marked library
+   auth.js       → needs Store for settings
+   admin.js      → uses ALL of the above; runs last
+
+   SECURITY:
+   meta robots noindex,nofollow — prevents search engines from
+   indexing this page (visitors shouldn't find it via Google).
+   All other security headers are same as index.html.
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en" data-theme="tokyo-night">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.anthropic.com https://api.github.com; img-src 'self' data: https: blob:; frame-src https://www.youtube.com https://player.vimeo.com https://www.youtube-nocookie.com;" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin — Game Dev Log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-body">
+
+<!-- AUTH GUARD — shown while checking, hidden once verified -->
+<div class="auth-guard" id="authGuard">
+  <div class="auth-guard-inner">
+    <div class="loading-dot-lg"></div>
+    <p>Verifying identity…</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav class="sidebar" id="sidebar" role="navigation" aria-label="Admin navigation">
+  <div class="sidebar-header">
+    <div class="logo-pixel"><span aria-hidden="true">🕹️</span></div>
+    <h1 class="blog-title">DEV<span class="cursor-blink">_</span>LOG</h1>
+    <p class="blog-tagline">admin panel</p>
+  </div>
+
+  <!-- Owner identity badge -->
+  <div class="owner-badge" id="ownerBadge">
+    <img id="ownerAvatar" src="" alt="GitHub avatar" class="owner-avatar" width="28" height="28" />
+    <div class="owner-info">
+      <span class="owner-name" id="ownerName">—</span>
+      <span class="owner-role">owner</span>
+    </div>
+    <button class="btn-ghost btn-sm" id="logoutBtn" title="Logout">↩</button>
+  </div>
+
+  <div class="sidebar-section">
+    <span class="sidebar-label">MANAGE</span>
+    <ul class="nav-links" role="list">
+      <li><a href="#" class="nav-link active" data-view="posts" aria-current="page">
+        <span class="nav-icon" aria-hidden="true">◈</span> All Posts
+      </a></li>
+      <li><a href="#" class="nav-link" data-view="write">
+        <span class="nav-icon" aria-hidden="true">✦</span> New Entry
+      </a></li>
+      <li><a href="#" class="nav-link" data-view="ai-assist">
+        <span class="nav-icon" aria-hidden="true">◉</span> AI Assist
+      </a></li>
+      <li><a href="#" class="nav-link" data-view="settings">
+        <span class="nav-icon" aria-hidden="true">◈</span> Settings
+      </a></li>
+      <li><a href="index.html" class="nav-link" target="_blank" rel="noopener">
+        <span class="nav-icon" aria-hidden="true">◈</span> View Public Site ↗
+      </a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <span class="sidebar-label">CATEGORIES</span>
+    <ul class="category-list" id="categoryList" role="list"></ul>
+    <button class="btn-ghost btn-sm" id="addCategoryBtn">+ add category</button>
+  </div>
+
+  <div class="sidebar-section sidebar-footer">
+    <span class="sidebar-label">THEME</span>
+    <div class="theme-switcher" role="group" aria-label="Choose theme">
+      <button class="theme-btn active" data-theme="tokyo-night" title="Tokyo Night" aria-pressed="true">TN</button>
+      <button class="theme-btn" data-theme="catppuccin" title="Catppuccin" aria-pressed="false">CP</button>
+      <button class="theme-btn" data-theme="nord" title="Nord" aria-pressed="false">ND</button>
+      <button class="theme-btn" data-theme="dracula" title="Dracula" aria-pressed="false">DR</button>
+      <button class="theme-btn" data-theme="gruvbox" title="Gruvbox" aria-pressed="false">GB</button>
+    </div>
+  </div>
+</nav>
+
+<button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main-content" id="mainContent" role="main">
+
+  <!-- ── POSTS MANAGEMENT VIEW ── -->
+  <div class="view active" id="view-posts">
+    <header class="page-header">
+      <div class="header-eyebrow">
+        <span class="pixel-dot" aria-hidden="true"></span>
+        <span id="postCount">0 entries</span>
+        <span class="pixel-dot" aria-hidden="true"></span>
+      </div>
+      <h2 class="page-title">All Posts</h2>
+      <div class="header-controls">
+        <div class="search-wrap" role="search">
+          <label for="searchInput" class="sr-only">Search posts</label>
+          <input type="search" id="searchInput" class="search-input" placeholder="search entries..." autocomplete="off" />
+        </div>
+        <select id="categoryFilter" class="filter-select">
+          <option value="">all categories</option>
+        </select>
+        <button class="btn-primary btn-sm" data-view="write">+ New Entry</button>
+      </div>
+    </header>
+    <div class="posts-grid admin-grid" id="postsGrid" role="feed" aria-label="Blog posts"></div>
+    <div class="empty-state hidden" id="emptyState">
+      <div class="pa-screen"><div class="pa-face">( ·_·)</div><div class="pa-text">no entries yet</div></div>
+      <p>Write your first dev log entry!</p>
+      <button class="btn-primary" data-view="write">Write First Entry</button>
+    </div>
+  </div>
+
+  <!-- ── POST DETAIL VIEW ── -->
+  <div class="view" id="view-post">
+    <div class="post-detail-toolbar">
+      <button class="btn-ghost back-btn" id="backBtn">← back</button>
+      <div class="post-detail-actions">
+        <button class="btn-secondary btn-sm" id="editPostBtn">Edit</button>
+        <button class="btn-danger btn-sm" id="deletePostBtn">Delete</button>
+      </div>
+    </div>
+    <article class="post-detail" id="postDetail"></article>
+  </div>
+
+  <!-- ── WRITE / EDIT VIEW ── -->
+  <div class="view" id="view-write">
+    <header class="page-header">
+      <h2 class="page-title" id="writeViewTitle">New Entry</h2>
+      <p class="page-subtitle">Write in Markdown. Embed images, videos, and attach files.</p>
+    </header>
+    <div class="write-panel">
+      <div class="form-group">
+        <label for="postTitle" class="form-label">Title</label>
+        <input type="text" id="postTitle" class="form-input" placeholder="What did you work on?" maxlength="120" />
+      </div>
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="postCategory" class="form-label">Category</label>
+          <select id="postCategory" class="form-input">
+            <option value="">Uncategorized</option>
+          </select>
+        </div>
+        <div class="form-group half">
+          <label for="postTags" class="form-label">Tags <span class="label-hint">(comma separated)</span></label>
+          <input type="text" id="postTags" class="form-input" placeholder="unity, pathfinding, tutorial" maxlength="200" />
+        </div>
+      </div>
+
+      <!-- MEDIA TOOLBAR -->
+      <div class="media-toolbar" role="toolbar" aria-label="Insert media">
+        <span class="media-toolbar-label">Insert:</span>
+        <button class="media-btn" id="insertImageBtn" title="Embed image (URL or upload)">
+          <span aria-hidden="true">🖼️</span> Image
+        </button>
+        <button class="media-btn" id="insertVideoBtn" title="Embed YouTube / Vimeo video">
+          <span aria-hidden="true">▶️</span> Video
+        </button>
+        <button class="media-btn" id="insertFileBtn" title="Attach a file">
+          <span aria-hidden="true">📎</span> File
+        </button>
+        <button class="media-btn" id="insertLinkBtn" title="Insert hyperlink">
+          <span aria-hidden="true">🔗</span> Link
+        </button>
+        <div class="media-toolbar-sep"></div>
+        <button class="media-btn" id="insertH2Btn" title="Heading">H2</button>
+        <button class="media-btn" id="insertBoldBtn" title="Bold"><b>B</b></button>
+        <button class="media-btn" id="insertCodeBtn" title="Code block">{ }</button>
+        <button class="media-btn" id="insertQuoteBtn" title="Blockquote">"</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span>Content (Markdown)</span>
+          <span class="tab-group" role="tablist">
+            <button role="tab" class="tab-btn active" id="tab-write" aria-selected="true">Write</button>
+            <button role="tab" class="tab-btn" id="tab-preview" aria-selected="false">Preview</button>
+          </span>
+        </label>
+        <div id="panel-write">
+          <textarea id="postContent" class="form-textarea editor-textarea"
+            placeholder="Write in Markdown. Use the toolbar above to insert images, videos, and file attachments." rows="20"></textarea>
+        </div>
+        <div id="panel-preview" class="hidden">
+          <div class="markdown-preview" id="markdownPreview"></div>
+        </div>
+      </div>
+
+      <!-- ATTACHMENTS PANEL -->
+      <div class="attachments-panel" id="attachmentsPanel">
+        <div class="attachments-header">
+          <span class="attachments-label">📎 Attachments</span>
+          <span class="attachments-count" id="attachCount">0 files</span>
+        </div>
+        <div class="attachments-list" id="attachmentsList"></div>
+        <label class="btn-ghost btn-sm attach-add-btn">
+          + Add File
+          <input type="file" id="attachFileInput" class="sr-only" multiple accept="*/*" />
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-secondary" id="aiBeautifyBtn">
+          <span aria-hidden="true">◉</span> AI Beautify
+        </button>
+        <button class="btn-ghost" id="cancelEditBtn">Cancel</button>
+        <button class="btn-primary" id="savePostBtn">
+          <span aria-hidden="true">✦</span> Publish Entry
+        </button>
+      </div>
+      <div class="ai-status hidden" id="aiStatus" role="status" aria-live="polite">
+        <span class="loading-dot"></span> AI is polishing your entry…
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI ASSIST VIEW ── -->
+  <div class="view" id="view-ai-assist">
+    <header class="page-header">
+      <h2 class="page-title">AI Assist</h2>
+      <p class="page-subtitle">Brain-dump what you built — Claude writes the full post.</p>
+    </header>
+    <div class="ai-panel">
+      <div class="daily-prompt-card">
+        <div class="dpc-header">
+          <span class="pixel-dot accent" aria-hidden="true"></span>
+          <span class="dpc-label">Daily Dev Prompt</span>
+          <span class="dpc-date" id="todayDate"></span>
+        </div>
+        <p class="dpc-question" id="dailyQuestion"></p>
+      </div>
+      <div class="form-group">
+        <label for="rawNotes" class="form-label">Your raw notes</label>
+        <textarea id="rawNotes" class="form-textarea" rows="8" maxlength="4000"
+          placeholder="e.g. 'added enemy AI today, gets stuck in corners, spent 2hrs on navmesh. also redrew tileset in aseprite.'"></textarea>
+        <div class="char-count"><span id="charCount">0</span>/4000</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="aiCategory" class="form-label">Category</label>
+          <select id="aiCategory" class="form-input"><option value="">Uncategorized</option></select>
+        </div>
+        <div class="form-group half">
+          <label for="aiGame" class="form-label">Game / Project</label>
+          <input type="text" id="aiGame" class="form-input" placeholder="Sanctuary of Spirits" maxlength="60" />
+        </div>
+      </div>
+      <div class="ai-options">
+        <label class="toggle-label">
+          <input type="checkbox" id="includeLinks" checked />
+          <span class="toggle-track" aria-hidden="true"></span>
+          Include resource links & docs
+        </label>
+        <label class="toggle-label">
+          <input type="checkbox" id="includeTips" checked />
+          <span class="toggle-track" aria-hidden="true"></span>
+          Add beginner tips & context
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" id="generatePostBtn">◉ Generate Post</button>
+      </div>
+      <div class="ai-loading hidden" id="aiLoading" role="status" aria-live="polite">
+        <div class="loading-bar"><div class="loading-fill"></div></div>
+        <p>Claude is crafting your dev log…</p>
+      </div>
+      <div class="ai-output hidden" id="aiOutput">
+        <div class="ao-header">
+          <span class="ao-label">Generated Post</span>
+          <button class="btn-ghost btn-sm" id="editGeneratedBtn">Edit before publishing</button>
+        </div>
+        <div class="markdown-preview" id="aiOutputContent"></div>
+        <div class="form-actions">
+          <button class="btn-secondary" id="regenerateBtn">↺ Regenerate</button>
+          <button class="btn-primary" id="publishGeneratedBtn">✦ Publish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SETTINGS VIEW ── -->
+  <div class="view" id="view-settings">
+    <header class="page-header"><h2 class="page-title">Settings</h2></header>
+    <div class="settings-panel">
+      <section class="settings-section">
+        <h3 class="settings-heading">AI Configuration</h3>
+        <div class="form-group">
+          <label for="apiKeyInput" class="form-label">Anthropic API Key</label>
+          <div class="api-key-wrap">
+            <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-ant-..." autocomplete="off" />
+            <button class="btn-ghost btn-sm" id="toggleApiKey">show</button>
+          </div>
+          <p class="form-hint">Stored locally only. Used exclusively to call Anthropic's API.</p>
+        </div>
+        <div class="form-group">
+          <label for="blogAuthor" class="form-label">Display Name / Handle</label>
+          <input type="text" id="blogAuthor" class="form-input" placeholder="@ty" maxlength="40" />
+        </div>
+        <div class="form-group">
+          <label for="promptTime" class="form-label">Daily Prompt Time</label>
+          <input type="time" id="promptTime" class="form-input" value="20:00" />
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+          <button class="btn-secondary" id="requestNotifBtn">Enable Notifications</button>
+        </div>
+        <div class="settings-status hidden" id="settingsStatus" role="status" aria-live="polite"></div>
+      </section>
+      <section class="settings-section">
+        <h3 class="settings-heading">Theme Control</h3>
+        <p class="settings-hint">Say a theme name in AI Assist to switch automatically, or pick below:</p>
+        <div class="theme-grid">
+          <button class="theme-card active" data-theme="tokyo-night">
+            <div class="tc-swatch" style="background:linear-gradient(135deg,#1a1b26,#7aa2f7,#bb9af7)"></div>
+            <span>Tokyo Night</span>
+          </button>
+          <button class="theme-card" data-theme="catppuccin">
+            <div class="tc-swatch" style="background:linear-gradient(135deg,#1e1e2e,#cba6f7,#89b4fa)"></div>
+            <span>Catppuccin</span>
+          </button>
+          <button class="theme-card" data-theme="nord">
+            <div class="tc-swatch" style="background:linear-gradient(135deg,#2e3440,#88c0d0,#81a1c1)"></div>
+            <span>Nord</span>
+          </button>
+          <button class="theme-card" data-theme="dracula">
+            <div class="tc-swatch" style="background:linear-gradient(135deg,#282a36,#ff79c6,#bd93f9)"></div>
+            <span>Dracula</span>
+          </button>
+          <button class="theme-card" data-theme="gruvbox">
+            <div class="tc-swatch" style="background:linear-gradient(135deg,#282828,#fabd2f,#b8bb26)"></div>
+            <span>Gruvbox</span>
+          </button>
+        </div>
+      </section>
+      <section class="settings-section">
+        <h3 class="settings-heading">Data Management</h3>
+        <div class="form-actions">
+          <button class="btn-secondary" id="exportBtn">↓ Export JSON</button>
+          <label class="btn-secondary btn-file-label">↑ Import JSON<input type="file" id="importInput" accept=".json" class="sr-only" /></label>
+          <button class="btn-danger" id="clearDataBtn">✕ Clear All Data</button>
+        </div>
+        <p class="form-hint danger-hint">Clearing data is permanent.</p>
+      </section>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════ SHARED MODALS ═══════════════════ -->
+<div class="modal-overlay hidden" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <h3 class="modal-title" id="modalTitle"></h3>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer" role="log" aria-live="polite" aria-atomic="false"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  marked.setOptions({ breaks: true, gfm: true });
+  window.__sanitize = function(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    div.querySelectorAll('script,object,embed,form,link,meta,base').forEach(el => el.remove());
+    div.querySelectorAll('*').forEach(el => {
+      [...el.attributes].forEach(attr => {
+        if (attr.name.startsWith('on') || (attr.name === 'href' && attr.value.startsWith('javascript:'))) {
+          el.removeAttribute(attr.name);
+        }
+      });
+      if (el.tagName === 'IFRAME') {
+        const src = el.getAttribute('src') || '';
+        const allowed = ['youtube.com','youtube-nocookie.com','vimeo.com'];
+        if (!allowed.some(h => src.includes(h))) el.remove();
+      }
+    });
+    return div.innerHTML;
+  };
+</script>
+<script src="js/store.js"></script>
+<script src="js/themes.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/markdown.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

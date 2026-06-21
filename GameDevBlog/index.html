@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+   INDEX.HTML — The Public Blog (What Visitors See)
+  ============================================================
+
+   This is the ONLY file visitors ever land on. It is
+   completely read-only — there are no create, edit, delete,
+   AI, or theme controls anywhere on this page.
+
+   WHAT'S ON THIS PAGE:
+   ┌─────────────────────────────────────────────────────┐
+   │  SIDEBAR (left)                                     │
+   │  • Blog title + tagline                             │
+   │  • "All Posts" navigation link                      │
+   │  • Category list (populated by JavaScript)          │
+   │  • "Owner Login" button at the very bottom          │
+   │    (subtle — visitors barely notice it)             │
+   ├─────────────────────────────────────────────────────┤
+   │  MAIN CONTENT (right)                               │
+   │  • Post feed: grid of clickable post cards          │
+   │  • OR: single post detail view (when a card is      │
+   │        clicked — no page reload, just JS swap)      │
+   ├─────────────────────────────────────────────────────┤
+   │  LOGIN POPUP (hidden until login button clicked)    │
+   │  • Small modal with "Continue with GitHub" button   │
+   │  • If login succeeds → redirects to admin.html      │
+   └─────────────────────────────────────────────────────┘
+
+   FILE RELATIONSHIPS:
+   This HTML file is the skeleton. The JS files add behaviour:
+   • store.js    → reads post/category data from localStorage
+   • themes.js   → applies the saved colour theme on load
+   • markdown.js → renders Markdown post content into HTML
+   • auth.js     → handles the GitHub OAuth login flow
+   • public.js   → wires everything together (the main controller)
+
+   ACCESSIBILITY:
+   Every interactive element has an aria-label or role attribute.
+   These are read aloud by screen readers, making the site usable
+   for people with visual impairments. The sr-only class hides
+   text visually but keeps it in the accessibility tree.
+  ============================================================
+-->
+<html lang="en" data-theme="tokyo-night">
+<!--
+  lang="en" — tells browsers and screen readers the page language
+  data-theme — the CSS theme selector; themes.js changes this attribute
+               to switch the colour scheme. "tokyo-night" is the default.
+-->
+<head>
+  <meta charset="UTF-8" />
+  <!-- UTF-8: the character encoding. Supports all languages + emoji. -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--
+    viewport: makes the page responsive on mobile devices.
+    Without this, mobile browsers would zoom out to show the desktop layout.
+    "width=device-width" = match the device's screen width.
+    "initial-scale=1.0" = don't zoom in or out by default.
+  -->
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.github.com; img-src 'self' data: https: blob:; frame-src https://www.youtube-nocookie.com https://player.vimeo.com;" />
+  <!--
+    CONTENT SECURITY POLICY (CSP) — A security header that controls
+    which resources the browser is allowed to load for this page.
+    It's like a whitelist for the browser.
+
+    Breaking it down piece by piece:
+    • default-src 'self'
+      → By default, only load things from THIS site's own domain.
+        Anything not explicitly listed below is blocked.
+
+    • script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com
+      → JavaScript can come from: this site, inline <script> blocks,
+        jsDelivr CDN (for the marked.js library), and Google Fonts.
+        All other script sources are blocked.
+
+    • style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com
+      → CSS can come from: this site, inline <style> blocks,
+        and Google Fonts. The 'unsafe-inline' allows the theme
+        system to set inline styles (e.g. category badge colours).
+
+    • font-src 'self' https://fonts.gstatic.com
+      → Font files can only be loaded from this site or Google Fonts.
+
+    • connect-src 'self' https://api.github.com
+      → JavaScript fetch() calls can only go to this site's own
+        server OR GitHub's API (for verifying login identity).
+        Prevents data being sent to unknown third parties.
+
+    • img-src 'self' data: https: blob:
+      → Images can be: from this site ('self'), base64 data URLs
+        (data:), any HTTPS URL (for externally linked images in posts),
+        or blob: URLs (for file previews).
+
+    • frame-src https://www.youtube-nocookie.com https://player.vimeo.com
+      → iframes (embedded videos) are ONLY allowed from these two
+        trusted video hosts. Any other iframe is blocked entirely.
+        youtube-nocookie.com is the privacy-respecting YouTube embed domain.
+  -->
+
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <!--
+    When someone clicks a link on your blog to an external site,
+    the browser normally tells that site where the visitor came from
+    (the "referrer"). "strict-origin-when-cross-origin" limits what's
+    shared: only your domain name is sent, not the full URL path.
+    This protects visitor privacy.
+  -->
+
+  <meta name="description" content="Indie game dev diary — following my journey building games from scratch." />
+  <!-- This text appears in Google search results under your page title. -->
+
+  <title>Game Dev Log</title>
+
+  <!--
+    FONT LOADING — Google Fonts (free)
+    We load three font families:
+    • Press Start 2P  → pixel/retro font used for headings and labels
+    • Inter           → clean modern sans-serif for body text (weights 300–700)
+    • JetBrains Mono  → monospace font for code, tags, dates, and captions
+
+    The two <link rel="preconnect"> tags tell the browser to open
+    a connection to Google's font servers early, before it actually
+    needs the fonts. This reduces the delay when fonts first load.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Our CSS files — loaded in order (themes first so variables exist when style.css runs) -->
+  <link rel="stylesheet" href="css/themes.css" />  <!-- colour palette variables for all 5 themes -->
+  <link rel="stylesheet" href="css/style.css" />   <!-- all layout and component styles -->
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR — The left navigation panel
+     ============================================================
+     role="navigation" tells screen readers this is a nav landmark.
+     aria-label distinguishes it from any other nav elements on the page.
+     The sidebar's width is fixed (240px) via CSS. On mobile, it
+     slides off-screen and can be toggled with the hamburger button.
+     ============================================================ -->
+<nav class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
+  <!-- ── HEADER — Logo, title, tagline ── -->
+  <div class="sidebar-header">
+    <div class="logo-pixel">
+      <span aria-hidden="true">🕹️</span>
+      <!-- aria-hidden="true" means screen readers skip this emoji,
+           since it's decorative and the title text below already explains the site -->
+    </div>
+    <h1 class="blog-title">DEV<span class="cursor-blink">_</span>LOG</h1>
+    <!--
+      .cursor-blink: a CSS animation that makes the underscore blink
+      like a terminal cursor. Defined in style.css as an @keyframes animation.
+    -->
+    <p class="blog-tagline">indie dev diary</p>
+  </div>
+
+  <!-- ── NAVIGATION LINKS ── -->
+  <div class="sidebar-section">
+    <span class="sidebar-label">NAVIGATE</span>
+    <ul class="nav-links" role="list">
+      <li>
+        <a href="#"
+           class="nav-link active"
+           data-filter=""
+           aria-current="page">
+          <!--
+            data-filter="" — JavaScript reads this attribute to know
+            which category filter to apply when clicked.
+            Empty string = "all posts" (no category filter).
+
+            aria-current="page" — tells screen readers this link
+            represents the currently active page/section.
+          -->
+          <span class="nav-icon" aria-hidden="true">◈</span> All Posts
+        </a>
+      </li>
+    </ul>
+    <!-- NOTE: Only "All Posts" is shown here. No write/AI/settings links
+         — those only appear in admin.html after login. -->
+  </div>
+
+  <!-- ── CATEGORIES — Populated by JavaScript ── -->
+  <div class="sidebar-section">
+    <span class="sidebar-label">CATEGORIES</span>
+    <ul class="category-list" id="categoryList" role="list">
+      <!-- This list is EMPTY in the HTML. public.js fills it in at runtime
+           by reading categories from localStorage and building <li> elements.
+           This way the categories are always up-to-date without editing HTML. -->
+    </ul>
+  </div>
+
+  <!-- ── SIDEBAR FOOTER — Login button only (no theme switcher for visitors) ── -->
+  <div class="sidebar-section sidebar-footer-public">
+    <!--
+      INTENTIONAL DESIGN DECISION:
+      Visitors see NO theme switcher here — that's an admin-only feature.
+      The only thing in the footer is a subtle login button for the owner.
+      It's styled to blend in (muted colour) so it doesn't distract visitors.
+    -->
+    <button class="btn-login" id="loginBtn" aria-label="Owner login via GitHub">
+      <!-- GitHub's official logo as an inline SVG.
+           Using SVG instead of an image means:
+           - No extra HTTP request to load an image file
+           - The icon scales perfectly at any size
+           - It inherits the CSS text colour
+           aria-hidden="true" hides it from screen readers (the button's
+           aria-label already describes its purpose) -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      Owner Login
+    </button>
+    <!-- Clicking this button opens the login popup modal below.
+         That's wired up in public.js → initLoginPopup() -->
+  </div>
+
+</nav>
+
+<!-- ============================================================
+     HAMBURGER MENU BUTTON — Mobile only
+     ============================================================
+     On small screens (≤768px), the sidebar is hidden off-screen.
+     This button toggles it open/closed.
+
+     The three <span> elements are the three horizontal lines (☰).
+     CSS animates them into an X when the .open class is added.
+
+     aria-expanded: tells screen readers whether the sidebar is
+     currently open ("true") or closed ("false").
+     aria-controls: points to the element this button controls (the sidebar).
+     ============================================================ -->
+<button class="hamburger"
+        id="hamburger"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+        aria-controls="sidebar">
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+
+<!-- ============================================================
+     MAIN CONTENT AREA
+     ============================================================
+     role="main" marks this as the primary content landmark.
+     Screen readers use this to let users jump straight to the
+     main content, skipping repeated navigation.
+     ============================================================ -->
+<main class="main-content" id="mainContent" role="main">
+
+  <!-- ══════════════════════════════════════════
+       VIEW: HOME — The post feed / card grid
+       ══════════════════════════════════════════
+       class="view active" — this view starts visible.
+       Only one view has "active" at a time. public.js
+       adds/removes "active" to switch between views.
+       ══════════════════════════════════════════ -->
+  <div class="view active" id="view-home">
+    <header class="page-header">
+
+      <!-- Eyebrow: small decorative line above the main title -->
+      <div class="header-eyebrow">
+        <span class="pixel-dot" aria-hidden="true"></span>
+        <span id="postCount">0 entries</span>
+        <!-- postCount is updated by JavaScript to show the actual number -->
+        <span class="pixel-dot" aria-hidden="true"></span>
+      </div>
+
+      <h2 class="page-title">Dev Journal</h2>
+
+      <!-- Search and filter controls -->
+      <div class="header-controls">
+
+        <!-- Search input -->
+        <div class="search-wrap" role="search">
+          <!-- role="search" is an ARIA landmark that tells screen readers
+               this area is a search widget -->
+          <label for="searchInput" class="sr-only">Search posts</label>
+          <!-- sr-only = visually hidden but present for screen readers.
+               The label connects to the input via "for"/"id" matching. -->
+          <input type="search"
+                 id="searchInput"
+                 class="search-input"
+                 placeholder="search entries..."
+                 autocomplete="off" />
+          <!-- type="search" adds a small ✕ clear button in some browsers.
+               autocomplete="off" prevents the browser from suggesting
+               previous search terms, which would look odd here. -->
+        </div>
+
+        <!-- Category filter dropdown -->
+        <div class="filter-wrap">
+          <label for="categoryFilter" class="sr-only">Filter by category</label>
+          <select id="categoryFilter" class="filter-select">
+            <option value="">all categories</option>
+            <!-- Additional options are added by JavaScript (populateCategorySelect)
+                 to stay in sync with whatever categories exist in the store. -->
+          </select>
+        </div>
+
+        <!-- NOTE: No "New Entry" button here — visitors can't write posts. -->
+      </div>
+    </header>
+
+    <!-- The post card grid — populated by JavaScript (renderPosts in public.js) -->
+    <div class="posts-grid" id="postsGrid" role="feed" aria-label="Blog posts">
+      <!-- role="feed" is an ARIA role for an infinitely scrollable list of articles.
+           JavaScript builds <article> elements here for each post. -->
+    </div>
+
+    <!-- Empty state — shown when there are no posts (or none match the filter) -->
+    <div class="empty-state hidden" id="emptyState">
+      <!-- hidden class = display:none by default. JavaScript removes it when needed. -->
+      <div class="pa-screen">
+        <!-- A tiny ASCII-art style face using text characters -->
+        <div class="pa-face">( ·_·)</div>
+        <div class="pa-text">no entries yet</div>
+      </div>
+      <p>No posts yet — check back soon!</p>
+    </div>
+  </div>
+  <!-- END view-home -->
+
+  <!-- ══════════════════════════════════════════
+       VIEW: POST DETAIL — A single post's full content
+       ══════════════════════════════════════════
+       This view starts hidden (no "active" class).
+       When a visitor clicks a post card, public.js:
+       1. Fetches the post data from the store
+       2. Builds the HTML and injects it into #postDetail
+       3. Adds "active" to this view and removes it from view-home
+       ══════════════════════════════════════════ -->
+  <div class="view" id="view-post">
+    <button class="btn-ghost back-btn" id="backBtn" aria-label="Back to all posts">← back</button>
+    <!-- Clicking "← back" switches back to the feed view (view-home) -->
+
+    <article class="post-detail" id="postDetail">
+      <!-- This <article> is empty in the HTML.
+           public.js → openPost() fills it with:
+           - Post title (h2)
+           - Date, category badge, tags
+           - Full post body rendered from Markdown
+           - Attached file download links (if any)
+           - Embedded video iframes (if any) -->
+    </article>
+  </div>
+  <!-- END view-post -->
+
+</main>
+
+<!-- ============================================================
+     LOGIN POPUP — The modal dialog for owner login
+     ============================================================
+     role="dialog" and aria-modal="true" tell screen readers
+     that this is a modal dialog — keyboard focus should be
+     trapped inside it while it's open.
+
+     aria-labelledby="loginTitle" connects the dialog to its
+     heading for screen reader announcements.
+
+     class="hidden" = display:none — the popup is invisible
+     until the loginBtn is clicked. public.js removes "hidden"
+     to show it, and adds it back to close it.
+     ============================================================ -->
+<div class="login-overlay hidden"
+     id="loginOverlay"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="loginTitle">
+  <div class="login-popup">
+
+    <!-- Close button (✕) in the top-right corner of the popup -->
+    <button class="login-close" id="loginClose" aria-label="Close">✕</button>
+
+    <!-- Decorative gamepad emoji at the top of the popup -->
+    <div class="login-icon" aria-hidden="true">🕹️</div>
+
+    <!-- The dialog's title — referenced by aria-labelledby above -->
+    <h2 class="login-title" id="loginTitle">Owner Login</h2>
+
+    <p class="login-desc">Sign in with GitHub to access the admin panel.</p>
+
+    <!-- The main action button — clicking this starts the OAuth flow -->
+    <button class="btn-github" id="githubLoginBtn">
+      <!-- GitHub logo SVG (same as the sidebar button but slightly larger) -->
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      Continue with GitHub
+      <!-- Clicking this calls Auth.login() which redirects the browser
+           to GitHub's authorisation page to start the OAuth flow. -->
+    </button>
+
+    <p class="login-note">Only the blog owner can access admin features.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOAST NOTIFICATION CONTAINER
+     ============================================================
+     Temporary pop-up messages (like "Error: Access denied") are
+     added here by JavaScript and removed after ~4 seconds.
+
+     role="log" + aria-live="polite" mean screen readers will
+     announce new messages as they appear, without interrupting
+     whatever the user was doing.
+
+     aria-atomic="false" allows each toast to be announced
+     individually rather than the entire container re-announced.
+     ============================================================ -->
+<div class="toast-container" id="toastContainer" role="log" aria-live="polite" aria-atomic="false"></div>
+
+
+<!-- ============================================================
+     JAVASCRIPT — Loaded at the bottom of <body>
+     ============================================================
+     Loading scripts at the bottom (rather than in <head>) means
+     the HTML is fully parsed and displayed before JavaScript runs.
+     This makes the page feel faster to load.
+
+     The order matters — each file depends on the ones before it:
+     marked.min.js → must come first (used by markdown.js)
+     store.js      → data layer (used by all other JS files)
+     themes.js     → needs Store to read/save the theme setting
+     markdown.js   → uses the globally loaded marked library
+     auth.js       → needs Store for settings, no other JS deps
+     public.js     → uses ALL of the above; runs last
+     ============================================================ -->
+
+<!-- marked.js — a third-party Markdown-to-HTML conversion library.
+     Loaded from jsDelivr CDN (a free, fast global network for open-source libraries).
+     "min.js" = minified version (whitespace removed to save bandwidth). -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+  /*
+   * MARKED CONFIGURATION + HTML SANITIZER
+   * ──────────────────────────────────────
+   * Configure the marked library's Markdown parsing options:
+   * - breaks: true  → single line breaks become <br> tags
+   * - gfm: true     → enable GitHub Flavored Markdown (tables, strikethrough, etc.)
+   */
+  marked.setOptions({ breaks: true, gfm: true });
+
+  /*
+   * __sanitize — removes dangerous HTML before it's shown on the page.
+   *
+   * Even though we sanitize content BEFORE saving it to localStorage
+   * (in store.js), we sanitize AGAIN when rendering. Defence in depth:
+   * multiple layers of protection are better than relying on just one.
+   *
+   * WHAT IT REMOVES:
+   * 1. Dangerous HTML elements entirely:
+   *    <script>  → JavaScript code blocks
+   *    <object>  → can embed Flash/plugins
+   *    <embed>   → same as object
+   *    <form>    → could submit data to attackers
+   *    <link>    → could load external CSS/scripts
+   *    <meta>    → could redirect the page
+   *    <base>    → could change relative URL resolution
+   *
+   * 2. Dangerous attributes on any element:
+   *    onclick=, onmouseover= etc. → inline JavaScript event handlers
+   *    href="javascript:..."       → JavaScript executed on link click
+   *
+   * 3. Untrusted iframes:
+   *    Only YouTube (youtube-nocookie.com) and Vimeo iframes are allowed.
+   *    Any other iframe src is removed entirely.
+   *    This is how embedded videos work safely.
+   */
+  window.__sanitize = function(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html; // parse HTML into a real DOM tree (safely — not rendered yet)
+
+    // Remove entirely dangerous elements
+    div.querySelectorAll('script,object,embed,form,link,meta,base')
+       .forEach(el => el.remove());
+
+    // Check every remaining element for dangerous attributes and untrusted iframes
+    div.querySelectorAll('*').forEach(el => {
+      // Loop over all attributes on this element
+      [...el.attributes].forEach(attr => {
+        // Remove event handler attributes (they all start with "on")
+        // Remove javascript: protocol from href attributes
+        if (attr.name.startsWith('on') ||
+           (attr.name === 'href' && attr.value.startsWith('javascript:'))) {
+          el.removeAttribute(attr.name);
+        }
+      });
+
+      // For iframes specifically: only allow trusted video hosts
+      if (el.tagName === 'IFRAME') {
+        const src = el.getAttribute('src') || '';
+        const trusted = ['youtube-nocookie.com', 'vimeo.com'];
+        if (!trusted.some(host => src.includes(host))) {
+          el.remove(); // remove any iframe from an untrusted source
+        }
+      }
+    });
+
+    return div.innerHTML; // return the cleaned HTML as a string
+  };
+</script>
+
+<!-- Our JavaScript modules, in dependency order: -->
+<script src="js/store.js"></script>    <!-- localStorage data layer -->
+<script src="js/themes.js"></script>   <!-- colour theme switcher -->
+<script src="js/markdown.js"></script> <!-- Markdown renderer -->
+<script src="js/auth.js"></script>     <!-- GitHub OAuth login handler -->
+<script src="js/public.js"></script>   <!-- main public page controller (runs last) -->
+
+</body>
+</html>

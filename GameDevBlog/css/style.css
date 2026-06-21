@@ -1,0 +1,1399 @@
+/*
+ * ============================================================
+ *  STYLE.CSS — Main Layout and Component Styles
+ * ============================================================
+ *
+ *  This is the primary stylesheet for the entire blog.
+ *  It covers layout, typography, and components for both
+ *  the public site (index.html) and admin panel (admin.html).
+ *
+ *  Colours are NOT defined here — they come from themes.css
+ *  as CSS custom properties (variables) like var(--accent).
+ *  This means you can change the entire colour palette by
+ *  just switching the data-theme attribute on <html>.
+ *
+ *  FILE MAP — Sections in this file:
+ *  ┌──────────────────────────────────────────────────────────┐
+ *  │  CSS RESET         Universal box-sizing, zero margins    │
+ *  │  ROOT VARIABLES    Font names, sizes, transition speed   │
+ *  │  SCROLLBAR         Custom thin scrollbar style           │
+ *  │  ACCESSIBILITY     Screen-reader helpers, focus rings    │
+ *  │  BASE              html/body fundamentals                │
+ *  │  SIDEBAR           Fixed left navigation panel           │
+ *  │  CATEGORIES        Sidebar category list + badges        │
+ *  │  THEME SWITCHER    TN/CP/ND/DR/GB mini buttons           │
+ *  │  MAIN CONTENT      Right-side content area               │
+ *  │  VIEWS             Show/hide page sections (SPA routing) │
+ *  │  PAGE HEADER       Title, eyebrow, search/filter bar     │
+ *  │  POSTS GRID        Card grid on the home feed            │
+ *  │  POST CARDS        Individual post preview cards         │
+ *  │  POST DETAIL       Single post full-content view         │
+ *  │  MARKDOWN STYLES   Rendered blog post typography         │
+ *  │  RESOURCE LINKS    Styled link cards in posts            │
+ *  │  FORMS             Inputs, textareas, labels, tabs       │
+ *  │  AI PANEL          AI Assist view components             │
+ *  │  SETTINGS          Settings page layout                  │
+ *  │  BUTTONS           All button variants                   │
+ *  │  MODALS            Popup dialog overlays                 │
+ *  │  TOASTS            Temporary notification messages       │
+ *  │  EMPTY STATE       "No posts yet" placeholder            │
+ *  │  HAMBURGER         Mobile ☰ menu button + animation      │
+ *  │  RESPONSIVE        Mobile breakpoints (≤768px wide)      │
+ *  │  UTILITY           .hidden class                         │
+ *  │  PUBLIC FOOTER     Login button styles                   │
+ *  └──────────────────────────────────────────────────────────┘
+ *
+ *  HOW CSS VARIABLES WORK HERE:
+ *  var(--accent) etc. are resolved by the browser at render time.
+ *  The values come from whichever [data-theme="..."] block in
+ *  themes.css is currently active. Changing the theme changes
+ *  all colours everywhere without reloading the page.
+ * ============================================================
+ */
+
+/*
+ * ── CSS RESET ──
+ * Removes the browser's built-in margin and padding from every element.
+ * By default, browsers add space around headings, paragraphs, lists, etc.
+ * Resetting to zero lets us control all spacing ourselves via CSS.
+ *
+ * box-sizing: border-box — changes how width/height is calculated.
+ * DEFAULT (content-box): width = content only. Padding and border ADD to total size.
+ * BORDER-BOX:            width = content + padding + border. Much more predictable.
+ *
+ * The * selector matches every element. *::before and *::after
+ * also apply to "pseudo-elements" (virtual elements CSS can insert).
+ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+/*
+ * ── ROOT VARIABLES — Layout constants ──
+ * These are CSS custom properties that don't change with the theme.
+ * Unlike the colour variables in themes.css, these are structural.
+ *
+ * --sidebar-w:   How wide the left sidebar is (in pixels)
+ * --font-pixel:  The pixel/retro font used for headings and labels
+ * --font-body:   The main readable font for body text
+ * --font-mono:   The monospace font for code, tags, dates
+ * --radius:      Standard corner rounding for cards and inputs
+ * --radius-lg:   Larger rounding for cards and modals
+ * --transition:  Default speed for hover/focus animations (0.18 seconds)
+ */
+:root {
+  --sidebar-w: 240px;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-body:  'Inter', system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+  --radius:     8px;
+  --radius-lg:  14px;
+  --transition: 0.18s ease;
+}
+
+
+/*
+ * ── SCROLLBAR — Custom thin scrollbar ──
+ * ::-webkit-scrollbar rules only work in Chrome, Edge, and Safari.
+ * Firefox uses a different system (scrollbar-width: thin).
+ * We make the scrollbar narrow (6px) and use the theme's border colour
+ * for the thumb (the draggable part), so it blends with the dark UI.
+ */
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
+
+
+/*
+ * ── ACCESSIBILITY — Screen reader helpers and focus indicators ──
+ *
+ * .sr-only (Screen Reader Only):
+ * Visually hides an element while keeping it in the accessibility tree.
+ * Screen readers will announce it; sighted users won't see it.
+ * Used for labels on icon-only buttons and hidden form labels.
+ * The unusual values (clip, width:1px, margin:-1px) are a well-known
+ * technique that hides elements without using display:none (which
+ * would also hide them from screen readers).
+ *
+ * :focus-visible:
+ * Shows a visible focus ring when an element is focused via KEYBOARD
+ * navigation (Tab key), but NOT when clicked with a mouse.
+ * This makes the site keyboard-navigable without the permanent
+ * "blue box" that older :focus styles added to mouse clicks.
+ *
+ * prefers-reduced-motion:
+ * Some users have vestibular disorders or sensitivity to motion.
+ * This media query detects their OS preference and disables ALL
+ * animations and transitions for them. !important overrides any
+ * inline or component-level animation settings.
+ */
+/* ── ACCESSIBILITY ── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); border: 0;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  BASE — html and body element fundamentals
+ * ══════════════════════════════════════════════
+ * html { scroll-behavior: smooth } — makes anchor link jumps
+ *   animate smoothly instead of teleporting instantly.
+ *
+ * body uses display:flex to create the two-column layout:
+ * [sidebar (fixed 240px)] [main content (fills rest)]
+ *
+ * min-height: 100vh — ensures the body is always at least
+ *   as tall as the viewport (100vh = 100% of viewport height).
+ *   Prevents a short page from having a colour gap at the bottom.
+ *
+ * overflow-x: hidden — prevents horizontal scrolling caused by
+ *   elements that accidentally extend beyond the page width.
+ */
+/* ═══════════════════ BASE ═══════════════════ */
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  line-height: 1.6;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  SIDEBAR — The fixed left navigation panel
+ * ══════════════════════════════════════════════
+ * The sidebar is fixed (position:fixed) — it stays in place as
+ * the main content scrolls. It sits at the left edge of the viewport
+ * and is always 240px wide (--sidebar-w variable from :root above).
+ *
+ * z-index: 100 — stacks above the main content. Without this,
+ * scrolled content could appear on top of the sidebar.
+ *
+ * overflow-y: auto — if the sidebar content is taller than the
+ * screen (many categories), the sidebar itself can scroll.
+ *
+ * transition: transform — when the sidebar slides in/out on mobile,
+ * this makes it animate smoothly rather than jumping instantly.
+ * On desktop, transform is never changed, so the transition does nothing.
+ */
+/* ═══════════════════ SIDEBAR ═══════════════════ */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 0;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 100;
+  overflow-y: auto;
+  transition: transform var(--transition);
+}
+
+.sidebar-header {
+  padding: 0 20px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.logo-pixel {
+  font-size: 28px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.blog-title {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.cursor-blink {
+  display: inline-block;
+  animation: blink 1.1s step-end infinite;
+  color: var(--accent-3);
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.blog-tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.sidebar-section {
+  padding: 16px 20px;
+}
+.sidebar-label {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+
+/*
+ * ── NAVIGATION LINKS ──
+ * Each nav item is a flex row: [icon] [label text]
+ * The active link gets a background highlight and accent-coloured text.
+ * nav-icon uses a smaller font size and accent-2 colour (purple)
+ * as a decorative glyph (◈, ✦, ◉).
+ */
+.nav-links { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background var(--transition), color var(--transition);
+}
+.nav-link:hover, .nav-link.active {
+  background: var(--bg-3);
+  color: var(--accent);
+}
+.nav-link.active { color: var(--accent); }
+.nav-icon { font-size: 10px; color: var(--accent-2); }
+
+/*
+ * ── CATEGORIES — Sidebar category list items ──
+ * Each category shows: [coloured dot] [name] [post count]
+ * The dot (.category-dot) gets its background colour set inline
+ * by JavaScript (style="background:#7aa2f7") matching the category.
+ * The list item is keyboard-accessible (role=button, tabindex=0).
+ */
+/* Categories */
+.category-list { list-style: none; display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.category-item:hover { background: var(--bg-3); }
+.category-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.category-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.category-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/*
+ * ── THEME SWITCHER — The TN/CP/ND/DR/GB mini buttons ──
+ * Five small buttons, each labelled with a 2-letter code.
+ * The active one gets the accent colour as background.
+ * Font size is tiny (6px) because the pixel font renders
+ * large at normal sizes — this keeps the buttons compact.
+ */
+/* Theme switcher */
+.sidebar-footer { margin-top: auto; border-top: 1px solid var(--border); }
+.theme-switcher { display: flex; gap: 6px; flex-wrap: wrap; }
+.theme-btn {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  padding: 5px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 0.5px;
+}
+.theme-btn:hover, .theme-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  MAIN CONTENT — The right-side content area
+ * ══════════════════════════════════════════════
+ * margin-left: var(--sidebar-w) — pushes the content right by
+ * exactly the sidebar width so they sit side by side.
+ *
+ * flex: 1 — tells this element to grow and fill all remaining
+ * horizontal space after the sidebar.
+ *
+ * max-width: calc(100vw - var(--sidebar-w)) — prevents content
+ * from ever being wider than the visible area minus the sidebar.
+ * Without this, wide content (like code blocks) could cause
+ * horizontal overflow.
+ *
+ * On mobile (≤768px), margin-left resets to 0 and the sidebar
+ * overlays the content instead of sitting beside it.
+ */
+/* ═══════════════════ MAIN CONTENT ═══════════════════ */
+.main-content {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 40px 48px;
+  min-height: 100vh;
+  max-width: calc(100vw - var(--sidebar-w));
+}
+
+/*
+ * ── VIEWS — Single Page App section switching ──
+ * The blog uses a Single Page App (SPA) pattern: multiple "views"
+ * (the feed, a single post, the editor, etc.) all live in the same
+ * HTML page. Only one is visible at a time.
+ *
+ * HOW IT WORKS:
+ * All .view elements are hidden by default (display: none).
+ * JavaScript adds the "active" class to whichever view should
+ * currently be visible, making it display: block.
+ * This switching happens instantly with no page reload.
+ */
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/*
+ * ── PAGE HEADER ──
+ * The top section of each view, containing the title, eyebrow
+ * (the small decorative line above the title), and search/filter controls.
+ * A bottom border separates it from the content below.
+ *
+ * .header-eyebrow: a small metadata line above the main title.
+ *   Contains the post count flanked by two decorative dots (•).
+ *
+ * .pixel-dot: a tiny coloured circle used as a visual accent.
+ *   "Pixel art" decorative elements like these are a signature
+ *   of the blog's game-dev aesthetic.
+ */
+/* ── PAGE HEADER ── */
+.page-header {
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.header-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.pixel-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  display: inline-block;
+}
+.pixel-dot.accent { background: var(--accent); }
+
+.page-title {
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  color: var(--text);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.page-subtitle { color: var(--text-muted); font-size: 14px; }
+
+.header-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.search-wrap { flex: 1; min-width: 200px; }
+.search-input {
+  width: 100%;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 14px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 13px;
+  transition: border-color var(--transition);
+}
+.search-input:focus { border-color: var(--accent); outline: none; }
+.filter-select {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 14px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  POSTS GRID — The card grid on the home feed
+ * ══════════════════════════════════════════════
+ * Uses CSS Grid to arrange post cards in columns.
+ *
+ * grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))
+ * This one line does a lot:
+ * - auto-fill:    create as many columns as fit in the space
+ * - minmax(320px, 1fr): each column is at least 320px wide,
+ *   but can grow to fill equal shares of remaining space (1fr)
+ * Result: On a wide screen you get 3 columns; on a narrow screen
+ * you get 1. No media queries needed — it's fully automatic.
+ */
+/* ═══════════════════ POSTS GRID ═══════════════════ */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/*
+ * ── POST CARD ──
+ * The clickable preview cards shown in the grid.
+ * Each has:
+ * - A subtle top gradient stripe that appears on hover (::before pseudo-element)
+ * - A box shadow glow on hover (using the theme's --card-glow variable)
+ * - A slight upward movement on hover (translateY(-3px))
+ * - The top stripe uses a CSS gradient from accent to accent-2 (blue to purple)
+ *
+ * The ::before pseudo-element technique:
+ * We add content:'' to create an invisible element, then
+ * animate its opacity to fade in on hover.
+ * This is more performant than animating background-color
+ * because opacity changes are GPU-accelerated.
+ */
+.post-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.post-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px var(--card-glow);
+  border-color: var(--accent);
+}
+.post-card:hover::before { opacity: 1; }
+
+.post-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.post-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.category-badge {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.post-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.post-card-excerpt {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.post-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.tag {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  background: var(--bg-3);
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+.tag::before { content: '#'; color: var(--accent-2); }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  POST DETAIL — Full single-post reading view
+ * ══════════════════════════════════════════════
+ * max-width: 740px — limits line length for comfortable reading.
+ * Extremely long lines (spanning the full browser width) are
+ * harder to read; ~60-80 characters per line is the typographic ideal.
+ */
+/* ═══════════════════ POST DETAIL ═══════════════════ */
+.back-btn { margin-bottom: 24px; }
+
+.post-detail {
+  max-width: 740px;
+}
+.post-detail-header { margin-bottom: 32px; }
+.post-detail-title {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.post-detail-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.post-detail-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  MARKDOWN STYLES — Post body typography
+ * ══════════════════════════════════════════════
+ * These styles apply to HTML generated by the marked.js library
+ * when it converts Markdown to HTML. We can't add classes to
+ * these elements (they're generated automatically), so we use
+ * descendant selectors like .post-detail-body h1.
+ *
+ * HEADING HIERARCHY:
+ * h1 → pixel font, accent blue, full-width underline
+ * h2 → pixel font (smaller), accent purple
+ * h3 → mono font, amber/orange
+ *
+ * CODE BLOCKS:
+ * Inline `code` uses a rounded background pill.
+ * Block ```code``` uses a full-width box with border.
+ * Both use the JetBrains Mono font (our --font-mono variable).
+ *
+ * TABLES:
+ * Automatically styled with accent-coloured header row and
+ * subtle row borders for readability.
+ *
+ * IFRAMES (embedded videos):
+ * Allowed only from youtube-nocookie.com and vimeo.com
+ * (enforced by the __sanitize function in the HTML files).
+ */
+/* ═══════════════════ MARKDOWN ═══════════════════ */
+.markdown-preview, .post-detail-body {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text);
+}
+.markdown-preview h1, .post-detail-body h1 {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  color: var(--accent);
+  margin: 32px 0 16px;
+  line-height: 1.6;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.markdown-preview h2, .post-detail-body h2 {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--accent-2);
+  margin: 28px 0 14px;
+  line-height: 1.6;
+}
+.markdown-preview h3, .post-detail-body h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-3);
+  margin: 22px 0 10px;
+  font-family: var(--font-mono);
+}
+.markdown-preview p, .post-detail-body p { margin-bottom: 16px; }
+.markdown-preview a, .post-detail-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color var(--transition);
+}
+.markdown-preview a:hover, .post-detail-body a:hover {
+  text-decoration-color: var(--accent);
+}
+.markdown-preview code, .post-detail-body code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--bg-3);
+  color: var(--accent-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.markdown-preview pre, .post-detail-body pre {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.markdown-preview pre code, .post-detail-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--text);
+}
+.markdown-preview blockquote, .post-detail-body blockquote {
+  border-left: 3px solid var(--accent-2);
+  padding: 10px 18px;
+  margin: 16px 0;
+  background: var(--bg-3);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--text-dim);
+  font-style: italic;
+}
+.markdown-preview ul, .post-detail-body ul,
+.markdown-preview ol, .post-detail-body ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+.markdown-preview li, .post-detail-body li { margin-bottom: 6px; }
+.markdown-preview hr, .post-detail-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
+.markdown-preview img, .post-detail-body img {
+  max-width: 100%;
+  border-radius: var(--radius);
+  margin: 12px 0;
+}
+.markdown-preview table, .post-detail-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+}
+.markdown-preview th, .post-detail-body th {
+  background: var(--bg-3);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--accent);
+  font-weight: 600;
+}
+.markdown-preview td, .post-detail-body td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Resource link cards (AI generated) ── */
+.resource-link-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin: 8px 0;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color var(--transition), background var(--transition);
+}
+.resource-link-card:hover { border-color: var(--accent); background: var(--bg-4); }
+.resource-link-icon { font-size: 18px; }
+.resource-link-text { display: flex; flex-direction: column; gap: 2px; }
+.resource-link-title { font-size: 13px; font-weight: 600; color: var(--accent); }
+.resource-link-desc { font-size: 11px; color: var(--text-muted); }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  FORMS — Input fields, textareas, labels
+ * ══════════════════════════════════════════════
+ * All form elements use the theme's background and border colours.
+ * When focused:
+ * - border-color changes to --accent (blue highlight)
+ * - box-shadow adds a subtle glow ring (using --accent-glow which
+ *   is a semi-transparent version of the accent colour)
+ *
+ * .form-label: small uppercase monospace labels above inputs.
+ *   display:flex + justify-content:space-between lets us put
+ *   the write/preview tab buttons on the right side of the label row.
+ *
+ * .form-row: puts two form groups side by side (e.g. Category + Tags).
+ *   Each .half takes up 50% of the row via flex:1.
+ *
+ * .char-count: the "0/4000" character counter below the AI notes textarea.
+ */
+/* ═══════════════════ WRITE / FORM ═══════════════════ */
+.write-panel, .ai-panel, .settings-panel { max-width: 720px; }
+
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+.label-hint { font-weight: 400; color: var(--text-muted); text-transform: none; }
+.form-input, .form-select {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.form-input:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  outline: none;
+}
+.form-textarea {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  resize: vertical;
+  min-height: 180px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.form-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  outline: none;
+}
+.form-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+.danger-hint { color: var(--danger); }
+.form-row { display: flex; gap: 16px; }
+.form-row .half { flex: 1; }
+
+.char-count { text-align: right; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 4px; }
+
+/* Tab group */
+.tab-group { display: flex; gap: 4px; }
+.tab-btn {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-transform: lowercase;
+  font-weight: 500;
+}
+.tab-btn.active, .tab-btn[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.markdown-preview {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  min-height: 240px;
+}
+
+/* ── AI Panel ── */
+/*
+ * ── AI PANEL — AI Assist view components ──
+ *
+ * .daily-prompt-card: the highlighted card showing today's prompt question.
+ *   Has an accent-coloured border and a subtle glow shadow to draw attention.
+ *   This is the first thing you see when you open AI Assist.
+ *
+ * .toggle-label: styled checkbox toggle switches (like iOS toggles).
+ *   The actual <input type="checkbox"> is hidden (.toggle-label input { display:none }).
+ *   The visible track (.toggle-track) and sliding circle (::after) are pure CSS.
+ *   When the checkbox is :checked, CSS sibling selector (~) changes the track colour
+ *   and moves the circle via translateX.
+ *
+ * .loading-bar / .loading-fill: the animated progress bar shown while Claude
+ *   is generating a post. Uses a CSS animation that moves a gradient bar
+ *   left-to-right to suggest activity without knowing the actual progress.
+ */
+.daily-prompt-card {
+  background: var(--bg-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+.dpc-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.dpc-label {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  flex: 1;
+}
+.dpc-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.dpc-question {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.7;
+  font-weight: 500;
+}
+
+.ai-options { display: flex; flex-direction: column; gap: 12px; margin: 16px 0 24px; }
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.toggle-label input { display: none; }
+.toggle-track {
+  width: 34px; height: 18px;
+  background: var(--bg-4);
+  border-radius: 9px;
+  position: relative;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform var(--transition), background var(--transition);
+}
+.toggle-label input:checked ~ .toggle-track { background: var(--accent); }
+.toggle-label input:checked ~ .toggle-track::after {
+  transform: translateX(16px);
+  background: var(--bg);
+}
+
+.ai-output { margin-top: 28px; }
+.ao-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.ao-label {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--accent-2);
+  letter-spacing: 1.5px;
+}
+
+.ai-loading {
+  text-align: center;
+  padding: 40px;
+}
+.loading-bar {
+  height: 3px;
+  background: var(--bg-3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.loading-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 2px;
+  animation: loadingPulse 1.4s ease-in-out infinite;
+}
+@keyframes loadingPulse {
+  0%   { width: 0%; margin-left: 0%; }
+  50%  { width: 60%; margin-left: 20%; }
+  100% { width: 0%; margin-left: 100%; }
+}
+.ai-loading p { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+
+.ai-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 12px;
+}
+.loading-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 1s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  SETTINGS — Settings page layout
+ * ══════════════════════════════════════════════
+ * The settings page groups related options into "sections" —
+ * bordered cards that visually separate: AI config, theme, and data management.
+ *
+ * .theme-grid: a CSS grid of theme preview cards, each showing a
+ *   small gradient swatch (a mini preview of the theme colours).
+ *   auto-fill with minmax(110px, 1fr) = flexible responsive grid.
+ *
+ * .api-key-wrap: positions the show/hide button flush to the right
+ *   of the API key input field.
+ */
+/* ═══════════════════ SETTINGS ═══════════════════ */
+.settings-section {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.settings-heading {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  margin-bottom: 20px;
+}
+.settings-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+
+.api-key-wrap { display: flex; gap: 8px; align-items: center; }
+.api-key-wrap .form-input { flex: 1; }
+
+.settings-status {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--accent-4);
+  font-family: var(--font-mono);
+}
+.settings-status.error { color: var(--danger); }
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 12px;
+}
+.theme-card {
+  background: var(--bg-3);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition);
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-body);
+}
+.theme-card:hover { border-color: var(--accent); }
+.theme-card.active { border-color: var(--accent); color: var(--accent); }
+.tc-swatch {
+  width: 100%; height: 32px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  BUTTONS — All button variants
+ * ══════════════════════════════════════════════
+ * Four button styles covering different visual weights:
+ *
+ * .btn-primary   → Filled with accent colour. For main actions (Publish, Save).
+ * .btn-secondary → Bordered/background. For secondary actions (AI Beautify).
+ * .btn-ghost     → No background or border. For tertiary actions (Cancel, Back).
+ * .btn-danger    → Red border/text, fills red on hover. For destructive actions (Delete).
+ *
+ * All buttons use display:inline-flex so the icon and label sit on
+ * the same line without needing to set vertical-align.
+ *
+ * .btn-sm: a modifier that reduces padding and font-size for smaller contexts.
+ * .btn-file-label: makes a <label> look like a button (for hidden file inputs).
+ */
+/* ═══════════════════ BUTTONS ═══════════════════ */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.btn-primary, .btn-secondary, .btn-ghost, .btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.btn-primary:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--bg-3);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: transparent;
+  padding: 6px 12px;
+}
+.btn-ghost:hover { background: var(--bg-3); color: var(--text); }
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.btn-danger:hover { background: var(--danger); color: var(--bg); }
+.btn-sm { font-size: 11px; padding: 5px 10px; }
+.btn-icon { font-size: 10px; }
+.btn-file-label { cursor: pointer; }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  MODALS — Popup dialog overlays
+ * ══════════════════════════════════════════════
+ * Same pattern as the login popup: a dark semi-transparent
+ * backdrop covers the page, and the actual dialog floats centred.
+ *
+ * backdrop-filter: blur(4px) — blurs the content behind the modal.
+ * This is a relatively modern CSS feature that adds visual depth,
+ * helping the modal stand out as a separate layer.
+ *
+ * max-width: 480px — modals are never wider than 480px, so they
+ * look like focused dialogs rather than full-page takeovers.
+ */
+/* ═══════════════════ MODALS ═══════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  max-width: 480px;
+  width: 100%;
+}
+.modal-title {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--accent);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+.modal-body { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ── Add Category modal content ── */
+.modal-form-group { margin-bottom: 16px; }
+.color-picker-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.color-swatch {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.color-swatch.selected, .color-swatch:hover {
+  border-color: var(--text);
+  transform: scale(1.15);
+}
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  TOASTS — Temporary notification messages
+ * ══════════════════════════════════════════════
+ * Toast notifications stack at the bottom-right of the screen.
+ * Each one slides in with a CSS animation (@keyframes toastIn)
+ * and is removed by JavaScript after 3.8 seconds.
+ *
+ * position: fixed + bottom/right — keeps them in the corner
+ * regardless of scroll position.
+ *
+ * Types: .success (green border), .error (red border), .info (blue border)
+ */
+/* ═══════════════════ TOASTS ═══════════════════ */
+.toast-container {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 340px;
+}
+.toast {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastIn 0.22s ease;
+}
+.toast.success { border-color: var(--accent-4); }
+.toast.error   { border-color: var(--danger); }
+.toast.info    { border-color: var(--accent); }
+.toast-icon { font-size: 14px; }
+@keyframes toastIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  EMPTY STATE — "No posts yet" placeholder
+ * ══════════════════════════════════════════════
+ * Shown when the blog has no posts, or when search/filter
+ * returns no results. The .pa-screen class renders a tiny
+ * ASCII-art style "screen" with a confused face: ( ·_·)
+ * This fits the game-dev terminal aesthetic of the blog.
+ */
+/* ═══════════════════ EMPTY STATE ═══════════════════ */
+.empty-state {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-muted);
+}
+.empty-state p { margin: 20px 0 24px; font-size: 14px; }
+.pa-screen {
+  display: inline-block;
+  background: var(--bg-3);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 28px;
+  font-family: var(--font-mono);
+  margin-bottom: 20px;
+}
+.pa-face { font-size: 20px; color: var(--accent-2); margin-bottom: 8px; }
+.pa-text { font-size: 10px; color: var(--text-muted); }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  HAMBURGER BUTTON — Mobile menu toggle (☰)
+ * ══════════════════════════════════════════════
+ * The button itself is hidden on desktop (display:none).
+ * On mobile (≤768px, set in the responsive section below),
+ * it becomes visible in the top-left corner.
+ *
+ * The three <span> child elements are the three horizontal lines.
+ * When the .open class is added by JavaScript:
+ * - Line 1 rotates 45° and moves down: ╲
+ * - Line 2 fades out (opacity: 0)
+ * - Line 3 rotates -45° and moves up:  ╱
+ * Together they form an X, signalling "close the menu".
+ */
+/* ═══════════════════ HAMBURGER / MOBILE ═══════════════════ */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  cursor: pointer;
+  position: fixed;
+  top: 16px; left: 16px;
+  z-index: 150;
+}
+.hamburger span {
+  display: block;
+  width: 20px; height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+  transition: all var(--transition);
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+
+/*
+ * ══════════════════════════════════════════════
+ *  RESPONSIVE — Mobile layout (≤768px wide)
+ * ══════════════════════════════════════════════
+ * On screens 768px wide or narrower (most phones):
+ *
+ * SIDEBAR: slides completely off-screen to the left via
+ *   transform: translateX(-100%). When .open class is added,
+ *   it slides back in over the content.
+ *
+ * HAMBURGER: becomes visible (display: flex).
+ *
+ * MAIN CONTENT: margin-left resets to 0 (no longer pushed right
+ *   by the sidebar). Top padding increases to clear the hamburger button.
+ *   max-width becomes 100% of the viewport.
+ *
+ * POSTS GRID: collapses from multi-column to single column.
+ * FORM ROWS: stack vertically instead of side by side.
+ * PAGE TITLE: slightly smaller font size.
+ *
+ * @media (max-width: 768px) is a "media query" — CSS rules inside it
+ * ONLY apply when the browser window is 768px wide or less.
+ */
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: flex; }
+  .main-content {
+    margin-left: 0;
+    padding: 72px 20px 40px;
+    max-width: 100vw;
+  }
+  .posts-grid { grid-template-columns: 1fr; }
+  .form-row { flex-direction: column; }
+  .page-title { font-size: 14px; }
+}
+
+.hidden { display: none !important; }
+
+/* ═══════════════════════════════════════════════
+   PUBLIC SIDEBAR FOOTER — login only, no theme
+   ═══════════════════════════════════════════════ */
+.sidebar-footer-public {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-login {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 14px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+.btn-login:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--bg-4);
+}
