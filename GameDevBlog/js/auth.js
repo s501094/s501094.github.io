@@ -93,7 +93,7 @@ const Auth = (() => {
    */
   const GITHUB_CLIENT_ID    = 'Ov23lirNCzw7GmLvM5CW';
   const ALLOWED_GITHUB_USER = 's501094';
-  const TOKEN_EXCHANGE_URL  = 'https://game-dev-blog-auth.s501094.workers.dev';
+  const TOKEN_EXCHANGE_URL  = 'https://game-dev-blog-auth.tyellis1111245.workers.dev';
 
 
   /* ============================================================
