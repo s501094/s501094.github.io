@@ -57,8 +57,8 @@ const AI = (() => {
    */
   const MODEL      = 'claude-sonnet-4-6';
   const MAX_TOKENS = 1800;
-  const API_URL    = 'https://api.anthropic.com/v1/messages';
-
+ // const API_URL    = 'https://api.anthropic.com/v1/messages';
+  const API_URL = 'https://game-dev-blog-auth.tyellis1111245.workers.dev/claude';
 
   /*
    * getKey — retrieves your Anthropic API key from Settings.
@@ -107,12 +107,7 @@ const AI = (() => {
       method: 'POST',
       headers: {
         'Content-Type':  'application/json',
-        'x-api-key':     key,                       // your personal Anthropic key
-        'anthropic-version': '2023-06-01',           // the API version we're using
-        // This header tells Anthropic we know we're calling from a browser directly.
-        // Normally API keys should be kept server-side, but since this is a personal
-        // blog and only you have the key, it's acceptable here.
-        'anthropic-dangerous-direct-browser-calls': 'true',
+        'X-User-Api-Key':     key,                       // your personal Anthropic key
       },
       body: JSON.stringify({
         model:      MODEL,
