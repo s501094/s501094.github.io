@@ -164,6 +164,7 @@ const Auth = (() => {
    */
   function login() {
     const state = generateState();
+    localStorage.setItem(STATE_KEY, state);
     sessionStorage.setItem(STATE_KEY, state); // save state to verify when GitHub redirects back
 
     // Build the GitHub authorisation URL with the required parameters
@@ -204,8 +205,9 @@ const Auth = (() => {
   async function exchangeCode(code, state) {
     // ── CSRF Check ──
     // Retrieve the state we saved before redirecting to GitHub
-    const saved = sessionStorage.getItem(STATE_KEY);
+    const saved = sessionStorage.getItem(STATE_KEY) || localStorage.getItem(STATE_KEY);
     sessionStorage.removeItem(STATE_KEY); // delete it — it's single-use
+    localStorage.removeItem(STATE_KEY);
 
     // If the state doesn't match, something is wrong — abort
     if (!saved || state !== saved) {
