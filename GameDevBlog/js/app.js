@@ -413,7 +413,7 @@ const App = (() => {
   function publishGenerated() {
     if (!generatedPost) return;
     const titleMatch = generatedPost.content.match(/^#\s+(.+)/m); // find first # heading
-    const title      = titleMatch ? titleMatch[1].trim() : 'Dev Log Entry';
+    const title      = titleMatch ? titleMatch[1].trim() : 'Dev Blog Entry';
     const post = Store.Posts.create({
       title,
       content:  generatedPost.content,

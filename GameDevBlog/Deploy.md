@@ -1,4 +1,4 @@
-# Game Dev Log — Full Deployment Guide
+# Game Dev Blog — Full Deployment Guide
 
 This guide walks you through every single step to get your blog live on GitHub Pages. No experience needed — every action is described in plain language with screenshots described at each stage so you know what you're looking for.
 
@@ -133,7 +133,7 @@ You'll see a form with four fields. Fill them in exactly like this:
 
 - **Application name:**
   ```
-  Game Dev Log
+  Game Dev Blog
   ```
   (This is just a label — you'll see it when GitHub asks you to approve the login)
 
@@ -392,8 +392,8 @@ Open your blog URL. You should see:
 1. Click **"Owner Login"** at the bottom of the sidebar
 2. A small popup appears with "Continue with GitHub"
 3. Click **"Continue with GitHub"**
-4. GitHub redirects you to an authorisation page asking if you want to give "Game Dev Log" access to your account
-5. Click **"Authorize Game Dev Log"** (the green button)
+4. GitHub redirects you to an authorisation page asking if you want to give "Game Dev Blog" access to your account
+5. Click **"Authorize Game Dev Blog"** (the green button)
 6. You should be redirected back to your blog and then automatically taken to `admin.html`
 
 **If login worked:** You'll see your GitHub profile picture and username in the sidebar, and you have access to All Posts, New Entry, AI Assist, and Settings.

@@ -1015,7 +1015,7 @@ const Admin = (() => {
     if (!generatedPost) return;
     // Find the first H1 heading with a regex and use it as the title
     const match = generatedPost.content.match(/^#\s+(.+)/m);
-    const title = match ? match[1].trim() : 'Dev Log Entry';
+    const title = match ? match[1].trim() : 'Dev Blog Entry';
     const post = Store.Posts.create({ title, ...generatedPost });
     toast('Entry published!', 'success');
     renderSidebarCategories();

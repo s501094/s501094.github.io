@@ -50,7 +50,7 @@ const AI = (() => {
    *
    * MAX_TOKENS: the maximum length of Claude's response.
    *             1800 tokens ≈ roughly 1,350 words. Enough for a full
-   *             dev log post with sections and resource links.
+   *             dev blog post with sections and resource links.
    *
    * API_URL:    the web address of Anthropic's messaging endpoint.
    *             This is where we send our requests.
@@ -300,7 +300,7 @@ Generate an appropriate title as the first H1 heading.`;
 
 
   /* ============================================================
-   *  NOTIFICATION SCHEDULING — Daily dev log reminders
+   *  NOTIFICATION SCHEDULING — Daily dev blog reminders
    * ============================================================
    *
    *  These functions set up browser notifications that ping you
@@ -376,7 +376,7 @@ Generate an appropriate title as the first H1 heading.`;
     setTimeout(() => {
       // Only show the notification if permission is still granted
       if (Notification.permission === 'granted') {
-        new Notification('🕹️ Dev Log Reminder', {
+        new Notification('🕹️ dev blog Reminder', {
           body: getDailyPrompt(), // today's rotating question
           // A tiny inline SVG gamepad emoji as the notification icon
           icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🕹️</text></svg>',

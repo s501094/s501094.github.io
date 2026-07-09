@@ -490,7 +490,7 @@ const Store = (() => {
     const data = JSON.parse(jsonString); // convert the text file back to a JS object
 
     // Bail out early with a clear error if the file doesn't look right
-    if (!data || data.version !== 1)  throw new Error('Invalid format — not a Game Dev Log backup');
+    if (!data || data.version !== 1)  throw new Error('Invalid format — not a Game Dev Blog backup');
     if (!Array.isArray(data.posts))   throw new Error('No posts array found in this file');
 
     // Re-sanitize every post on the way in

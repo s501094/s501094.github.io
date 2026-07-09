@@ -1,4 +1,4 @@
-# Game Dev Log — Free Setup Guide
+# Game Dev Blog — Free Setup Guide
 
 Everything here is 100% free with no credit card required.
 
@@ -17,7 +17,7 @@ Everything here is 100% free with no credit card required.
 1. Go to https://github.com/settings/developers
 2. Click **OAuth Apps** → **New OAuth App**
 3. Fill in:
-   - **Application name**: `Game Dev Log`
+   - **Application name**: `Game Dev Blog`
    - **Homepage URL**: `https://YOURNAME.github.io/YOURREPO`
    - **Authorization callback URL**: `https://YOURNAME.github.io/YOURREPO/`
 4. Click **Register application**
