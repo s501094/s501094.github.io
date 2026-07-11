@@ -1,0 +1,176 @@
+/*
+ * ============================================================
+ *  THEMES.CSS — Colour Palettes for All Five Themes
+ * ============================================================
+ *
+ *  HOW CSS THEMES WORK:
+ *  ─────────────────────
+ *  This file defines "CSS custom properties" (also called CSS
+ *  variables) — named colour slots that can be used anywhere
+ *  in style.css and admin.css.
+ *
+ *  Instead of writing a specific colour like "#7aa2f7" everywhere,
+ *  we write "var(--accent)" instead. Then we define what --accent
+ *  actually IS for each theme in this file.
+ *
+ *  When you switch themes, themes.js changes the "data-theme"
+ *  attribute on the <html> element (e.g. data-theme="dracula").
+ *  CSS then automatically uses the matching variable set below,
+ *  and the entire page recolours instantly — no page reload needed.
+ *
+ *  VARIABLE REFERENCE:
+ *  ┌──────────────┬────────────────────────────────────────────────┐
+ *  │ --bg         │ Main background (the darkest layer)            │
+ *  │ --bg-2       │ Sidebar / card backgrounds (slightly lighter)  │
+ *  │ --bg-3       │ Input fields, hover states                     │
+ *  │ --bg-4       │ Active/focused elements                        │
+ *  │ --border     │ Lines, dividers, box outlines                  │
+ *  │ --text       │ Primary body text                              │
+ *  │ --text-muted │ Subdued text (dates, hints, labels)            │
+ *  │ --text-dim   │ Secondary text (excerpts, descriptions)        │
+ *  │ --accent     │ Primary highlight colour (blue-ish)            │
+ *  │ --accent-2   │ Secondary highlight (purple-ish)               │
+ *  │ --accent-3   │ Amber / warm highlight                         │
+ *  │ --accent-4   │ Green / success colour                         │
+ *  │ --danger     │ Red / error / delete colour                    │
+ *  │ --card-glow  │ Subtle shadow colour for hovered cards         │
+ *  │ --accent-glow│ Glow around focused inputs                     │
+ *  │ --scrollbar  │ Colour of scrollbar thumbs                     │
+ *  └──────────────┴────────────────────────────────────────────────┘
+ *
+ *  TO ADD A NEW THEME:
+ *  Copy one of the blocks below, give it a new data-theme name,
+ *  and change the colour values. Then add the name to the VALID
+ *  array in themes.js and add a button in admin.html.
+ * ============================================================
+ */
+
+
+/* ──────────────────────────────────────────────
+   TOKYO NIGHT (default)
+   Inspired by the "Tokyo Night" VS Code theme.
+   Deep navy blues, soft lavenders, and a warm amber accent.
+   The default theme — what everyone sees first.
+   ────────────────────────────────────────────── */
+[data-theme="tokyo-night"] {
+  --bg:            #0d1117; /* very dark navy — main page background */
+  --bg-2:          #1a1f2e; /* dark blue-grey — sidebar and cards */
+  --bg-3:          #24283b; /* medium blue-grey — input fields */
+  --bg-4:          #2f3549; /* lighter blue-grey — active states */
+  --border:        #3b4261; /* blue-grey border lines */
+  --text:          #c0caf5; /* lavender-white — primary text */
+  --text-muted:    #565f89; /* muted blue-grey — dates, hints */
+  --text-dim:      #9aa5ce; /* soft lavender — secondary text */
+  --accent:        #7aa2f7; /* cornflower blue — primary highlight */
+  --accent-2:      #bb9af7; /* soft purple — secondary highlight */
+  --accent-3:      #e0af68; /* amber — warm highlights */
+  --accent-4:      #9ece6a; /* green — success indicators */
+  --danger:        #f7768e; /* coral red — errors, delete buttons */
+  --card-glow:     rgba(122, 162, 247, 0.08);  /* faint blue glow on card hover */
+  --accent-glow:   rgba(122, 162, 247, 0.15);  /* blue ring on focused inputs */
+  --scrollbar:     #3b4261; /* scrollbar thumb colour */
+}
+
+
+/* ──────────────────────────────────────────────
+   CATPPUCCIN MOCHA
+   Inspired by the "Catppuccin Mocha" theme —
+   a popular pastel-on-dark palette beloved by
+   the Linux ricing community. Warm and cosy.
+   ────────────────────────────────────────────── */
+[data-theme="catppuccin"] {
+  --bg:            #1e1e2e; /* deep mauve-black */
+  --bg-2:          #181825; /* darker base layer */
+  --bg-3:          #313244; /* surface for inputs */
+  --bg-4:          #45475a; /* overlay elements */
+  --border:        #45475a; /* border lines */
+  --text:          #cdd6f4; /* soft lavender text */
+  --text-muted:    #6c7086; /* muted subtext */
+  --text-dim:      #bac2de; /* dimmed text */
+  --accent:        #89b4fa; /* sky blue */
+  --accent-2:      #cba6f7; /* mauve/lavender */
+  --accent-3:      #fab387; /* peach */
+  --accent-4:      #a6e3a1; /* green */
+  --danger:        #f38ba8; /* pink-red */
+  --card-glow:     rgba(137, 180, 250, 0.07);
+  --accent-glow:   rgba(137, 180, 250, 0.14);
+  --scrollbar:     #45475a;
+}
+
+
+/* ──────────────────────────────────────────────
+   NORD
+   Inspired by the "Nord" theme — a clean,
+   arctic-inspired palette of cool blues and
+   slate greys. Feels calm and professional.
+   ────────────────────────────────────────────── */
+[data-theme="nord"] {
+  --bg:            #2e3440; /* dark polar night */
+  --bg-2:          #242933; /* deeper dark layer */
+  --bg-3:          #3b4252; /* surface layer */
+  --bg-4:          #434c5e; /* elevated elements */
+  --border:        #4c566a; /* steel grey borders */
+  --text:          #eceff4; /* snow white text */
+  --text-muted:    #4c566a; /* frost grey — muted */
+  --text-dim:      #d8dee9; /* light grey text */
+  --accent:        #88c0d0; /* frost blue */
+  --accent-2:      #81a1c1; /* steel blue */
+  --accent-3:      #ebcb8b; /* aurora yellow */
+  --accent-4:      #a3be8c; /* aurora green */
+  --danger:        #bf616a; /* aurora red */
+  --card-glow:     rgba(136, 192, 208, 0.07);
+  --accent-glow:   rgba(136, 192, 208, 0.14);
+  --scrollbar:     #4c566a;
+}
+
+
+/* ──────────────────────────────────────────────
+   DRACULA
+   Inspired by the "Dracula" theme — vivid,
+   high-contrast purples and pinks on near-black.
+   Popular for its boldness and readability.
+   ────────────────────────────────────────────── */
+[data-theme="dracula"] {
+  --bg:            #282a36; /* dark background */
+  --bg-2:          #21222c; /* current line shade */
+  --bg-3:          #343746; /* selection background */
+  --bg-4:          #3e4151; /* lighter layer */
+  --border:        #44475a; /* comment grey */
+  --text:          #f8f8f2; /* foreground white */
+  --text-muted:    #6272a4; /* comment blue-grey */
+  --text-dim:      #c5c8da; /* dimmed foreground */
+  --accent:        #8be9fd; /* cyan */
+  --accent-2:      #bd93f9; /* purple */
+  --accent-3:      #ffb86c; /* orange */
+  --accent-4:      #50fa7b; /* green */
+  --danger:        #ff5555; /* red */
+  --card-glow:     rgba(139, 233, 253, 0.07);
+  --accent-glow:   rgba(139, 233, 253, 0.14);
+  --scrollbar:     #44475a;
+}
+
+
+/* ──────────────────────────────────────────────
+   GRUVBOX DARK
+   Inspired by the "Gruvbox" Vim colour scheme.
+   Earthy yellows, warm browns, and muted greens
+   on a dark olive/brown background. Retro feel.
+   ────────────────────────────────────────────── */
+[data-theme="gruvbox"] {
+  --bg:            #282828; /* dark brown-black */
+  --bg-2:          #1d2021; /* darker layer */
+  --bg-3:          #3c3836; /* surface layer */
+  --bg-4:          #504945; /* elevated elements */
+  --border:        #504945; /* warm grey borders */
+  --text:          #ebdbb2; /* warm cream text */
+  --text-muted:    #928374; /* grey-brown muted */
+  --text-dim:      #d5c4a1; /* light cream */
+  --accent:        #83a598; /* aqua */
+  --accent-2:      #d3869b; /* pink */
+  --accent-3:      #fabd2f; /* yellow */
+  --accent-4:      #b8bb26; /* green-yellow */
+  --danger:        #fb4934; /* bright red */
+  --card-glow:     rgba(131, 165, 152, 0.07);
+  --accent-glow:   rgba(131, 165, 152, 0.14);
+  --scrollbar:     #504945;
+}

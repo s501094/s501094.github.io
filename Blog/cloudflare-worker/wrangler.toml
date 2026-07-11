@@ -1,0 +1,8 @@
+# Wrangler config for local testing (optional)
+# Deploy via dashboard: https://workers.cloudflare.com
+name       = "gamedev-blog-auth"
+main       = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Set these as secrets via dashboard, not here:
+# GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, ALLOWED_ORIGIN
