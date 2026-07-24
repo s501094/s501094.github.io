@@ -172,7 +172,7 @@ const Auth = (() => {
       client_id:    GITHUB_CLIENT_ID,
       scope:        'read:user',               // only request minimal permissions
       state,                                   // the anti-CSRF token
-      redirect_uri: 'https://s501094.github.io/GameDevBlog/',
+      redirect_uri: 'https://s501094.github.io/Blog/',
       // redirect_uri: window.location.href.split('?')[0], // come back to the current page (strip any existing query params)
     });
 
