@@ -140,6 +140,56 @@ const Store = (() => {
     }
   }
 
+  /* ============================================================
+   *  STATIC CONTENT — posts/categories pushed to the repo as files
+   * ============================================================
+   *
+   *  Some posts are written by committing directly to git (e.g. from
+   *  Claude Code) instead of through admin.html. Those live as plain
+   *  JSON in data/posts.json and data/categories.json, not localStorage,
+   *  so a fresh visitor sees them immediately with no browser-specific
+   *  state involved. loadStaticContent() fetches both once and caches
+   *  them here; Posts.getAll()/Categories.getAll() merge them in below.
+   *  Each is tagged `source: 'file'` so the admin UI knows these are
+   *  read-only there — edits belong in the repo, not the editor.
+   */
+  let staticPosts = [];
+  let staticCategories = [];
+
+  async function loadStaticContent() {
+    try {
+      const [postsRes, catsRes] = await Promise.all([
+        fetch('data/posts.json').catch(() => null),
+        fetch('data/categories.json').catch(() => null),
+      ]);
+      const rawPosts = postsRes && postsRes.ok ? await postsRes.json() : [];
+      const rawCats  = catsRes  && catsRes.ok  ? await catsRes.json()  : [];
+
+      staticPosts = (Array.isArray(rawPosts) ? rawPosts : []).map(p => ({
+        id:          typeof p.id === 'string' ? p.id : crypto.randomUUID(),
+        title:       sanitizeText(p.title || 'Untitled Entry'),
+        content:     sanitizeMarkdown(p.content || ''),
+        category:    sanitizeText(p.category || ''),
+        tags:        Array.isArray(p.tags) ? p.tags.map(t => sanitizeText(t)).slice(0, 10) : [],
+        createdAt:   typeof p.createdAt === 'string' ? p.createdAt : new Date().toISOString(),
+        updatedAt:   typeof p.updatedAt === 'string' ? p.updatedAt : (p.createdAt || new Date().toISOString()),
+        aiGenerated: Boolean(p.aiGenerated),
+        attachments: [], // file-based posts carry no binary attachments
+        source:      'file',
+      }));
+
+      staticCategories = (Array.isArray(rawCats) ? rawCats : []).map(c => ({
+        id:       typeof c.id === 'string' ? c.id : crypto.randomUUID(),
+        name:     sanitizeText(c.name || '').slice(0, 30),
+        color:    /^#[0-9a-f]{6}$/i.test(c.color) ? c.color : CATEGORY_COLORS[0],
+        parentId: c.parentId || null,
+        source:   'file',
+      }));
+    } catch (e) {
+      console.error('Failed to load static content:', e); // e.g. fetch blocked on file://
+    }
+  }
+
   /* safeSet — writes a value to localStorage under a given key */
   function safeSet(key, value) {
     try {
@@ -181,7 +231,10 @@ const Store = (() => {
      * other code doesn't have to check for null.
      */
     getAll() {
-      return safeGet(KEYS.POSTS) || [];
+      const local = safeGet(KEYS.POSTS) || [];
+      // Merge in file-based posts and sort the combined list newest-first,
+      // since the two sources can no longer be ordered by insertion alone.
+      return [...staticPosts, ...local].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     },
 
     /*
@@ -202,7 +255,10 @@ const Store = (() => {
      * TOP (unshift) so the most recent always appears first.
      */
     create(data) {
-      const posts = this.getAll(); // load existing posts so we can add to them
+      // NOTE: reads/writes the LOCAL list only (not the static+local merge from
+      // getAll()) — otherwise saving would duplicate file-based posts into
+      // localStorage on every write.
+      const posts = safeGet(KEYS.POSTS) || []; // load existing posts so we can add to them
 
       const post = {
         id:          crypto.randomUUID(), // built-in browser function: generates a unique ID like "f3a2b1c4-..."
@@ -233,9 +289,9 @@ const Store = (() => {
      * else stays the same. The "updatedAt" timestamp is always refreshed.
      */
     update(id, data) {
-      const posts = this.getAll();
+      const posts = safeGet(KEYS.POSTS) || []; // LOCAL list only — see note in create()
       const idx = posts.findIndex(p => p.id === id); // find the index (position) of this post
-      if (idx === -1) return null; // not found — do nothing
+      if (idx === -1) return null; // not found — do nothing (also true for file-based post IDs)
 
       posts[idx] = {
         ...posts[idx], // ← spread: start with all the EXISTING post data
@@ -262,7 +318,9 @@ const Store = (() => {
      * This is irreversible — there's no recycle bin!
      */
     delete(id) {
-      const posts = this.getAll().filter(p => p.id !== id); // keep everything that doesn't match
+      // LOCAL list only — see note in create(). Filtering a static post's id
+      // out of this list is a harmless no-op; it simply isn't in it.
+      const posts = (safeGet(KEYS.POSTS) || []).filter(p => p.id !== id); // keep everything that doesn't match
       safeSet(KEYS.POSTS, posts);
     },
 
@@ -371,7 +429,8 @@ const Store = (() => {
 
     /* getAll — returns every category (projects AND subcategories) as one flat list */
     getAll() {
-      return safeGet(KEYS.CATEGORIES) || DEFAULT_CATEGORIES;
+      const local = safeGet(KEYS.CATEGORIES) || DEFAULT_CATEGORIES;
+      return [...staticCategories, ...local];
     },
 
     /*
@@ -409,13 +468,16 @@ const Store = (() => {
      *    subcategory (that would make three levels, which we don't allow)
      */
     create(name, color, parentId = null) {
-      const cats = this.getAll();
-      if (cats.length >= 40) throw new Error('Max 40 categories'); // enforced limit
+      // Validate against the merged (static + local) list — a subcategory
+      // should be creatable under a project that was pushed as a file too —
+      // but only ever WRITE the local list back to storage (see create() in Posts).
+      const allCats = this.getAll();
+      if (allCats.length >= 40) throw new Error('Max 40 categories'); // enforced limit
 
       // Validate the parent, if one was specified
       let validatedParent = null;
       if (parentId) {
-        const parent = cats.find(c => c.id === parentId);
+        const parent = allCats.find(c => c.id === parentId);
         if (!parent) throw new Error('Selected parent project not found.');
         if (parent.parentId) throw new Error('Subcategories can only be nested one level deep.');
         validatedParent = parent.id;
@@ -430,8 +492,8 @@ const Store = (() => {
         parentId: validatedParent,                       // null = top-level project
       };
 
-      cats.push(cat);             // add to the END of the list
-      safeSet(KEYS.CATEGORIES, cats);
+      const localCats = safeGet(KEYS.CATEGORIES) || DEFAULT_CATEGORIES;
+      safeSet(KEYS.CATEGORIES, [...localCats, cat]);
       return cat;
     },
 
@@ -449,15 +511,17 @@ const Store = (() => {
      * showing them as uncategorized rather than crashing.
      */
     delete(id) {
-      const cats = this.getAll();
+      // Scan the merged list for children (a locally-created subcategory might
+      // sit under a project that was pushed as a file) but only ever WRITE the
+      // local list back — deleting a file-based category itself belongs in
+      // data/categories.json, not here.
       const idsToDelete = new Set([id]);
-
-      // If this is a project, also mark every one of its subcategories for deletion
-      cats.forEach(c => {
+      this.getAll().forEach(c => {
         if (c.parentId === id) idsToDelete.add(c.id);
       });
 
-      const remaining = cats.filter(c => !idsToDelete.has(c.id));
+      const localCats = safeGet(KEYS.CATEGORIES) || DEFAULT_CATEGORIES;
+      const remaining = localCats.filter(c => !idsToDelete.has(c.id));
       safeSet(KEYS.CATEGORIES, remaining);
     },
 
@@ -624,6 +688,6 @@ const Store = (() => {
    *    Store.Settings.save({ theme: "dracula" })
    *    Store.exportData()
    */
-  return { Posts, Categories, Settings, exportData, importData };
+  return { Posts, Categories, Settings, exportData, importData, loadStaticContent };
 
 })(); // ← the () here immediately runs the function that wraps everything above

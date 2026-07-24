@@ -1,0 +1,14 @@
+[
+  {
+    "id": "file-games",
+    "name": "Games",
+    "color": "#7aa2f7",
+    "parentId": null
+  },
+  {
+    "id": "file-games-sos",
+    "name": "SanctuaryOfSpirits",
+    "color": "#9ece6a",
+    "parentId": "file-games"
+  }
+]

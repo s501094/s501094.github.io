@@ -573,6 +573,9 @@ const Public = (() => {
       toast(e.message, 'error'); // show the error (e.g. "Access denied")
     }
 
+    // Step 1.5: Pull in any posts/categories pushed straight to the repo as files
+    await Store.loadStaticContent();
+
     // Step 2: Load the saved colour theme (visitors can't change it, but it initialises to default)
     Themes.init();
 

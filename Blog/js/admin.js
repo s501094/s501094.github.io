@@ -282,6 +282,9 @@ const Admin = (() => {
    * isProject — true if this is a top-level project (not a subcategory)
    */
   function confirmDeleteCategory(id, name, isProject) {
+    if (Store.Categories.getAll().find(c => c.id === id)?.source === 'file') {
+      return toast(`"${name}" is managed in data/categories.json, not the editor.`, 'info');
+    }
     const childCount = isProject ? Store.Categories.getChildren(id).length : 0;
     const cascadeWarning = childCount
       ? `This will also delete its ${childCount} subcategor${childCount === 1 ? 'y' : 'ies'}. `
@@ -397,6 +400,15 @@ const Admin = (() => {
         ? `<span class="media-indicator">📎 ${post.attachments.length}</span>`
         : '';
 
+      // File-based posts (pushed straight to the repo) have no edit/delete
+      // here — they're managed by committing to data/posts.json instead.
+      const actions = post.source === 'file'
+        ? `<span class="tag" title="Pushed to the repo — edit data/posts.json to change it">📄 from repo</span>`
+        : `<div class="admin-card-actions">
+            <button class="btn-ghost btn-sm edit-btn" data-id="${post.id}" aria-label="Edit post">Edit</button>
+            <button class="btn-danger btn-sm delete-btn" data-id="${post.id}" aria-label="Delete post">Delete</button>
+          </div>`;
+
       return `
         <article class="post-card admin-card" role="article" tabindex="0" data-id="${post.id}">
           <div class="post-card-meta">
@@ -407,10 +419,7 @@ const Admin = (() => {
           <p class="post-card-excerpt">${Markdown.excerpt(post.content)}</p>
           ${tags}
           <!-- Admin controls: Edit and Delete buttons appear on hover -->
-          <div class="admin-card-actions">
-            <button class="btn-ghost btn-sm edit-btn" data-id="${post.id}" aria-label="Edit post">Edit</button>
-            <button class="btn-danger btn-sm delete-btn" data-id="${post.id}" aria-label="Delete post">Delete</button>
-          </div>
+          ${actions}
         </article>`;
     }).join('');
 
@@ -493,7 +502,11 @@ const Admin = (() => {
       }
     });
 
-    // Wire up the toolbar Edit and Delete buttons to this specific post
+    // File-based posts (pushed straight to the repo) aren't editable here —
+    // changes belong in data/posts.json, not this localStorage-backed editor.
+    const isFilePost = post.source === 'file';
+    $('editPostBtn').style.display   = isFilePost ? 'none' : '';
+    $('deletePostBtn').style.display = isFilePost ? 'none' : '';
     $('editPostBtn').onclick   = () => editPost(post.id);
     $('deletePostBtn').onclick = () => confirmDelete(post.id);
 
@@ -561,6 +574,7 @@ const Admin = (() => {
   function editPost(id) {
     const post = Store.Posts.getById(id);
     if (!post) return;
+    if (post.source === 'file') return toast('This post is managed in data/posts.json, not the editor.', 'info');
 
     showView('write'); // navigate to the editor view
 
@@ -627,6 +641,9 @@ const Admin = (() => {
    * The modal has two buttons: Cancel (does nothing) and Delete (permanent).
    */
   function confirmDelete(id) {
+    if (Store.Posts.getById(id)?.source === 'file') {
+      return toast('This post is managed in data/posts.json, not the editor.', 'info');
+    }
     showModal('Delete Entry', 'Are you sure? This cannot be undone.', [
       { label: 'Cancel', cls: 'btn-ghost', action: closeModal },
       { label: 'Delete', cls: 'btn-danger', action: () => {
@@ -1513,6 +1530,7 @@ const Admin = (() => {
     }
 
     // STEP 3: Initialise subsystems
+    await Store.loadStaticContent(); // pull in any posts/categories pushed straight to the repo as files
     Themes.init();       // load saved theme
     initMarkdownTabs();  // set up write/preview tab switching
 
